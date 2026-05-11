@@ -32,6 +32,7 @@ type IconProps = SVGProps<SVGSVGElement> & {
     | "eye-closed"
     | "eye-open"
     | "google-fullcolor"
+    | "hamburger-menu-toggle"
     | "home"
     | "lock"
     | "mail"
@@ -59,6 +60,7 @@ const Icon = ({
     case "eye-closed":
     case "arrow-left-circle":
     case "discount":
+    case "hamburger-menu-toggle":
       return (
         <IconImage
           name={name as keyof typeof iconImagePath}

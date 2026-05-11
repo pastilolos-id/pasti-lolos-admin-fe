@@ -1,4 +1,4 @@
-import { Sidebar, TokenValidator } from "@/components";
+import { PrivateRouteNavbar, Sidebar, TokenValidator } from "@/components";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui";
 
 export default function PrivateRouteLayout({
@@ -15,7 +15,9 @@ export default function PrivateRouteLayout({
           <SidebarTrigger className="" />
         </div>
 
-        <div className="w-full min-h-full bg-white rounded-card-medium lg:p-3 sm:p-6 p-3">
+        <PrivateRouteNavbar />
+
+        <div className="mt-28 w-full min-h-full rounded-card-medium bg-white p-3 sm:p-6 lg:mt-0 lg:p-3">
           {children}
         </div>
       </div>

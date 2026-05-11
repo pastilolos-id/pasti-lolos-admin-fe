@@ -2,6 +2,7 @@ import arrowLeftCircleIcon from "@/assets/icons/arrow-left-circle.svg";
 import discountIcon from "@/assets/icons/discount.svg";
 import eyeClosedIcon from "@/assets/icons/eye-closed.svg";
 import googleFullcolorIcon from "@/assets/icons/google-fullcolor.svg";
+import hamburgerMenuToggleIcon from "@/assets/icons/hamburger-menu-toggle.svg";
 
 type IconsType = {
   [key: string]: string;
@@ -23,6 +24,10 @@ const iconImagePath = {
   discount: {
     src: discountIcon,
     alt: "Discount Icon",
+  },
+  "hamburger-menu-toggle": {
+    src: hamburgerMenuToggleIcon,
+    alt: "Menu",
   },
 };
 

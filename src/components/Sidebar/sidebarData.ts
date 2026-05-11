@@ -1,7 +1,5 @@
 import type { IconProps } from "@/components/Icon";
 
-export const MENU_GROUP_LABEL = "Menu items";
-
 export type MenuItemType = {
   title: string;
   href: string;

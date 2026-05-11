@@ -3,17 +3,31 @@
 import { useRouter } from "next/navigation";
 import Icon from "@/components/Icon";
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui";
+import { cn } from "@/lib/utils";
 
-export default function LogoutSidebarMenuButton() {
+export default function LogoutSidebarMenuButton({
+  onBeforeLogout,
+  layout = "sidebar",
+}: {
+  onBeforeLogout?: () => void;
+  layout?: "sidebar" | "navbar";
+} = {}) {
   const router = useRouter();
+  const isNavbar = layout === "navbar";
 
   return (
     <SidebarMenuItem>
       <SidebarMenuButton
         type="button"
         tooltip="Keluar"
-        className="px-2 py-3 hover:bg-red active:bg-red/70 w-full! flex group-data-[collapsible=icon]:justify-center"
+        className={cn(
+          "w-full! flex px-2 py-3 group-data-[collapsible=icon]:justify-center",
+          isNavbar
+            ? "border-0 bg-red text-white hover:bg-red hover:brightness-105 active:bg-red active:brightness-[0.78] active:saturate-150"
+            : "hover:bg-red active:bg-red/70",
+        )}
         onClick={() => {
+          onBeforeLogout?.();
           router.replace("/login");
         }}
       >
