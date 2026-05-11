@@ -1,0 +1,28 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@import "./../styles/typography.css";
+@import "./../styles/colors.css";
+@import "./../styles/effects.css";
+@import "./../styles/base-ui.css";
+
+@custom-variant dark (&:is(.dark *));
+
+.bg-gradient-admin-shell {
+  background-image: linear-gradient(
+    292.97deg,
+    var(--primary-5) 46.24%,
+    var(--primary-4) 101.65%
+  );
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-plus-jakarta-sans);
+  }
+}
