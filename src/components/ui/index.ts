@@ -1,6 +1,7 @@
 export * from "./alert";
 export * from "./avatar";
 export * from "./button";
+export * from "./chart";
 export * from "./checkbox";
 export * from "./collapsible";
 export * from "./field";
@@ -11,5 +12,6 @@ export * from "./separator";
 export * from "./sheet";
 export * from "./sidebar";
 export * from "./skeleton";
+export * from "./table";
 export * from "./textarea";
 export * from "./tooltip";

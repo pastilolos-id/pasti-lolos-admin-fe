@@ -17,7 +17,7 @@ export default function PrivateRouteLayout({
 
         <PrivateRouteNavbar />
 
-        <div className="mt-28 w-full min-h-full rounded-card-medium bg-white p-3 sm:p-6 lg:mt-0 lg:p-3">
+        <div className="mt-28 w-full rounded-card-medium bg-white p-6 lg:mt-0">
           {children}
         </div>
       </div>
