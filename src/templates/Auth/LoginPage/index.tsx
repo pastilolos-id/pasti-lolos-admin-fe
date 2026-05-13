@@ -1,5 +1,6 @@
 "use client";
 
+import Cookies from "js-cookie";
 import { AlertCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -13,7 +14,7 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const formRef = useRef<FormHandle>(null);
   const [globalMessage, setGlobalMessage] = useState<string | null>(null);
-  const [isLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const errorFromQuery = searchParams.get("error");
@@ -34,10 +35,49 @@ export default function LoginPage() {
     formRef.current?.clearErrors();
   };
 
-  const handleOnSubmitForm = async (_payload: Record<string, unknown>) => {
+  const handleOnSubmitForm = async (payload: Record<string, unknown>) => {
     setGlobalMessage(null);
     formRef.current?.clearErrors();
-    // TODO: wire to backend later
+    setIsLoading(true);
+
+    const email = payload.email as string;
+    const password = payload.password as string;
+
+    if (email === "user@gmail.com") {
+      const userAppUrl = process.env.NEXT_PUBLIC_USER_APP_URL;
+      if (userAppUrl) {
+        window.location.href = userAppUrl;
+      }
+      setIsLoading(false);
+      return;
+    }
+
+    const isEmailValid = email === "admin@gmail.com";
+    const isPasswordValid = password === "admin123";
+
+    if (!isEmailValid || !isPasswordValid) {
+      if (!isEmailValid) {
+        formRef.current?.setError("email", {
+          type: "manual",
+          message: "Email salah",
+        });
+      }
+      if (!isPasswordValid) {
+        formRef.current?.setError("password", {
+          type: "manual",
+          message: "Password salah",
+        });
+      }
+      setIsLoading(false);
+      return;
+    }
+
+    Cookies.set("token", "mock-admin-token-xxx", {
+      expires: 1,
+      path: "/",
+    });
+
+    router.replace("/dashboard");
   };
 
   return (
