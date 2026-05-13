@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Form, type FormHandle } from "@/components";
 import { Alert, AlertDescription, AlertTitle, Button } from "@/components/ui";
+import { AUTH_TOKEN_COOKIE_NAME } from "@/constants/auth";
 import AuthLeftSection from "../LeftSection";
 import { loginInputData } from "./inputData";
 
@@ -72,7 +73,7 @@ export default function LoginPage() {
       return;
     }
 
-    Cookies.set("token", "mock-admin-token-xxx", {
+    Cookies.set(AUTH_TOKEN_COOKIE_NAME, "mock-admin-token-xxx", {
       expires: 1,
       path: "/",
     });

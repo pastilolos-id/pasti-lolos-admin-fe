@@ -29,8 +29,12 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${plusJakartaSans.variable} ${robotoMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full bg-background text-foreground">
+      <body
+        className="min-h-full bg-background text-foreground"
+        suppressHydrationWarning
+      >
         <AppProvider>{children}</AppProvider>
       </body>
     </html>
