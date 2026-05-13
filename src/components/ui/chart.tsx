@@ -18,6 +18,16 @@ export type ChartConfig = Record<
   )
 >;
 
+/** Fields read from recharts tooltip/legend payload entries. */
+type ChartPayloadItem = {
+  type?: string;
+  name?: string | number;
+  dataKey?: string | number;
+  value?: string | number;
+  color?: string;
+  payload?: unknown;
+};
+
 type ChartContextProps = {
   config: ChartConfig;
 };
@@ -130,22 +140,28 @@ function ChartTooltipContent({
   nameKey,
   labelKey,
 }: {
-    active?: boolean;
-    // biome-ignore lint/suspicious/noExplicitAny: recharts tooltip payload is loosely typed
-    payload?: Array<Record<string, any>>;
-    label?: string;
-    // biome-ignore lint/suspicious/noExplicitAny: recharts formatter signature
-    labelFormatter?: (label: any, payload: any[]) => React.ReactNode;
-    // biome-ignore lint/suspicious/noExplicitAny: recharts formatter signature
-    formatter?: (value: any, name: any, item: any, index: number, payload: any) => React.ReactNode;
-    hideLabel?: boolean;
-    hideIndicator?: boolean;
-    indicator?: "line" | "dot" | "dashed";
-    nameKey?: string;
-    labelKey?: string;
-    color?: string;
-    labelClassName?: string;
-  } & React.ComponentProps<"div">) {
+  active?: boolean;
+  payload?: ChartPayloadItem[];
+  label?: string;
+  labelFormatter?: (
+    label: unknown,
+    payload: ChartPayloadItem[],
+  ) => React.ReactNode;
+  formatter?: (
+    value: unknown,
+    name: unknown,
+    item: ChartPayloadItem,
+    index: number,
+    payload: unknown,
+  ) => React.ReactNode;
+  hideLabel?: boolean;
+  hideIndicator?: boolean;
+  indicator?: "line" | "dot" | "dashed";
+  nameKey?: string;
+  labelKey?: string;
+  color?: string;
+  labelClassName?: string;
+} & React.ComponentProps<"div">) {
   const { config } = useChart();
 
   const tooltipLabel = React.useMemo(() => {
@@ -193,7 +209,7 @@ function ChartTooltipContent({
   return (
     <div
       className={cn(
-        "grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl",
+        "grid min-w-32 items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl",
         className,
       )}
     >
@@ -204,7 +220,14 @@ function ChartTooltipContent({
           .map((item, index) => {
             const key = `${nameKey ?? item.name ?? item.dataKey ?? "value"}`;
             const itemConfig = getPayloadConfigFromPayload(config, item, key);
-            const indicatorColor = color ?? item.payload?.fill ?? item.color;
+            const payloadFill =
+              typeof item.payload === "object" &&
+              item.payload !== null &&
+              "fill" in item.payload &&
+              typeof (item.payload as { fill?: unknown }).fill === "string"
+                ? (item.payload as { fill: string }).fill
+                : undefined;
+            const indicatorColor = color ?? payloadFill ?? item.color;
 
             return (
               <div
@@ -224,7 +247,7 @@ function ChartTooltipContent({
                       !hideIndicator && (
                         <div
                           className={cn(
-                            "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
+                            "shrink-0 rounded-xs border-(--color-border) bg-(--color-bg)",
                             {
                               "h-2.5 w-2.5": indicator === "dot",
                               "w-1": indicator === "line",
@@ -281,12 +304,11 @@ function ChartLegendContent({
   verticalAlign = "bottom",
   nameKey,
 }: React.ComponentProps<"div"> & {
-    // biome-ignore lint/suspicious/noExplicitAny: recharts legend payload is loosely typed
-    payload?: Array<Record<string, any>>;
-    verticalAlign?: "top" | "bottom" | "middle";
-    hideIcon?: boolean;
-    nameKey?: string;
-  }) {
+  payload?: ChartPayloadItem[];
+  verticalAlign?: "top" | "bottom" | "middle";
+  hideIcon?: boolean;
+  nameKey?: string;
+}) {
   const { config } = useChart();
 
   if (!payload?.length) {
@@ -318,7 +340,7 @@ function ChartLegendContent({
                 <itemConfig.icon />
               ) : (
                 <div
-                  className="h-2 w-2 shrink-0 rounded-[2px]"
+                  className="h-2 w-2 shrink-0 rounded-xs"
                   style={{
                     backgroundColor: item.color,
                   }}
