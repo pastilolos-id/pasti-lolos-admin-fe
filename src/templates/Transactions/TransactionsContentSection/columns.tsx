@@ -1,12 +1,9 @@
-import { Trash2 } from "lucide-react";
-import Icon from "@/components/Icon";
 import type { TableCoulmnType, TableDataType } from "@/components/Table/types";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-import { TransferProofCell } from "./TransferProofCell";
 import type { RowDisplayStatus, TransactionRow } from "../types";
+import { TransactionActionsCell } from "./TransactionActionsCell";
+import { TransferProofCell } from "./TransferProofCell";
 
 const statusLabel: Record<RowDisplayStatus, string> = {
   aktif: "Aktif",
@@ -110,36 +107,16 @@ export function getTransactionColumns(rowOffset: number): TableCoulmnType[] {
       accessorKey: "actions",
       title: "Action",
       textPosition: "center",
-      className: "w-[1%] align-middle",
+      className: "min-w-[7.5rem] w-[1%] align-middle",
       cell: (row) => {
         const r = asRow(row);
         return (
-          <div className="flex items-center justify-center gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-xs"
-              className="rounded-full bg-[#80B0FF]/25 text-[#448AFF] hover:bg-[#80B0FF]/40"
-              aria-label="Lihat detail"
-              onClick={() => {
-                void r.id;
-              }}
-            >
-              <Icon name="eye-open" size={20} className="size-5 shrink-0" />
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-xs"
-              className="rounded-full bg-[#FF5649]/20 text-[#FF5649] hover:bg-[#FF5649]/30"
-              aria-label="Hapus"
-              onClick={() => {
-                void r.id;
-              }}
-            >
-              <Trash2 className="size-4 shrink-0" strokeWidth={2.25} />
-            </Button>
-          </div>
+          <TransactionActionsCell
+            id={r.id}
+            transactionCode={r.transactionCode}
+            buyerEmail={r.buyerEmail}
+            priceDisplay={r.priceDisplay}
+          />
         );
       },
     },

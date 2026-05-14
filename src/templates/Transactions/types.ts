@@ -3,6 +3,7 @@
  *
  * Expected REST shape (illustrative):
  * - `id` -> `id` (UUID)
+ * - `transactionCode` -> `transaction_code` (nomor referensi tampil di konfirmasi approve)
  * - `buyerName` -> `user.full_name`
  * - `buyerEmail` -> `user.email`
  * - `proofUrl` -> `payment_proof.url` (optional)
@@ -16,6 +17,8 @@ export type RowDisplayStatus = "aktif" | "tidak_aktif";
 
 export type TransactionRow = {
   id: string;
+  /** Kode transaksi untuk tampilan & konfirmasi (contoh: TRANS40220). */
+  transactionCode: string;
   buyerName: string;
   buyerEmail: string;
   /** 1 = tampilkan thumbnail bukti (API bisa boolean; disimpan angka agar kompatibel dengan tabel generik). */
