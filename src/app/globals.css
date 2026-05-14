@@ -34,3 +34,10 @@
     font-family: var(--font-plus-jakarta-sans);
   }
 }
+
+/* Tryout admin form — mode view: hindari teks pudar bawaan disabled/readOnly */
+@layer utilities {
+  .tryout-form-view-input {
+    @apply opacity-100;
+  }
+}

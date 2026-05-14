@@ -1,6 +1,7 @@
 "use client";
 
 import { Clock, SquarePen } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import Icon from "@/components/Icon";
 import { Button } from "@/components/ui/button";
@@ -15,8 +16,9 @@ type TryoutCardProps = {
   item: TryoutListItem;
 };
 
-/** Nanti: gunakan item.editHref atau router.push ke /tryout/[id]/edit. */
 export default function TryoutCard({ item }: TryoutCardProps) {
+  const router = useRouter();
+
   return (
     <Card
       className={cn(
@@ -57,6 +59,7 @@ export default function TryoutCard({ item }: TryoutCardProps) {
         variant="primary"
         size="sm"
         className="mt-auto h-11 w-full rounded-full text-sm font-bold text-white"
+        onClick={() => router.push(`/tryout/${item.id}/edit`)}
       >
         <SquarePen className="size-4 shrink-0 opacity-90" aria-hidden />
         Ubah Tryout
