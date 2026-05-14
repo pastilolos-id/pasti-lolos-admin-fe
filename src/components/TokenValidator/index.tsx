@@ -1,20 +1,48 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+
+import { isValidMockSessionToken } from "@/constants/auth";
+import { LOGIN_PATH } from "@/constants/routes";
+import { getToken, removeToken } from "@/lib/cookies/tokenCookies";
+
+const MOCK_VALIDATE_MS = 300;
+
+type Phase = "checking" | "idle";
 
 export default function TokenValidator() {
   const pathname = usePathname();
-  const [phase, setPhase] = useState<"checking" | "idle">("checking");
+  const router = useRouter();
+  const [phase, setPhase] = useState<Phase>("checking");
+  const cancelled = useRef(false);
 
   useEffect(() => {
-    void pathname;
+    cancelled.current = false;
     setPhase("checking");
+    void pathname;
+
     const timer = window.setTimeout(() => {
+      if (cancelled.current) {
+        return;
+      }
+
+      const raw = getToken();
+      if (!isValidMockSessionToken(raw)) {
+        removeToken();
+        router.replace(LOGIN_PATH);
+        setPhase("idle");
+        return;
+      }
+
       setPhase("idle");
-    }, 300);
-    return () => window.clearTimeout(timer);
-  }, [pathname]);
+    }, MOCK_VALIDATE_MS);
+
+    return () => {
+      cancelled.current = true;
+      window.clearTimeout(timer);
+    };
+  }, [pathname, router]);
 
   if (phase === "checking") {
     return (

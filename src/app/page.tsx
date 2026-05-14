@@ -1,15 +1,18 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { AUTH_TOKEN_COOKIE_NAME } from "@/constants/auth";
+import {
+  AUTH_TOKEN_COOKIE_NAME,
+  isValidMockSessionToken,
+} from "@/constants/auth";
+import { DASHBOARD_PATH, LOGIN_PATH } from "@/constants/routes";
 
 export default async function Home() {
   const raw = (await cookies()).get(AUTH_TOKEN_COOKIE_NAME)?.value;
-  const token = raw?.trim();
 
-  if (token) {
-    redirect("/dashboard");
+  if (isValidMockSessionToken(raw)) {
+    redirect(DASHBOARD_PATH);
   }
 
-  redirect("/login");
+  redirect(LOGIN_PATH);
 }

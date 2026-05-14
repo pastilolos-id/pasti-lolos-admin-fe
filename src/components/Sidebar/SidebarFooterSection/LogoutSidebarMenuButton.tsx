@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import Icon from "@/components/Icon";
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui";
+import { LOGIN_PATH } from "@/constants/routes";
+import { removeToken } from "@/lib/cookies/tokenCookies";
 import { cn } from "@/lib/utils";
 
 export default function LogoutSidebarMenuButton({
@@ -28,7 +30,8 @@ export default function LogoutSidebarMenuButton({
         )}
         onClick={() => {
           onBeforeLogout?.();
-          router.replace("/login");
+          removeToken();
+          router.replace(LOGIN_PATH);
         }}
       >
         <Icon size={24} name="door" />

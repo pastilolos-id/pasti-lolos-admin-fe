@@ -1,12 +1,13 @@
 "use client";
 
-import Cookies from "js-cookie";
 import { AlertCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Form, type FormHandle } from "@/components";
 import { Alert, AlertDescription, AlertTitle, Button } from "@/components/ui";
-import { AUTH_TOKEN_COOKIE_NAME } from "@/constants/auth";
+import { isValidMockSessionToken } from "@/constants/auth";
+import { DASHBOARD_PATH, LOGIN_PATH } from "@/constants/routes";
+import { getToken, setToken } from "@/lib/cookies/tokenCookies";
 import AuthLeftSection from "../LeftSection";
 import { loginInputData } from "./inputData";
 
@@ -16,6 +17,12 @@ export default function LoginPage() {
   const formRef = useRef<FormHandle>(null);
   const [globalMessage, setGlobalMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isValidMockSessionToken(getToken())) {
+      router.replace(DASHBOARD_PATH);
+    }
+  }, [router]);
 
   useEffect(() => {
     const errorFromQuery = searchParams.get("error");
@@ -28,7 +35,7 @@ export default function LoginPage() {
     } catch {
       setGlobalMessage(raw.replace(/\+/g, " "));
     }
-    router.replace("/login", { scroll: false });
+    router.replace(LOGIN_PATH, { scroll: false });
   }, [searchParams, router]);
 
   const handleOnClickGoogleButton = () => {
@@ -73,12 +80,9 @@ export default function LoginPage() {
       return;
     }
 
-    Cookies.set(AUTH_TOKEN_COOKIE_NAME, "mock-admin-token-xxx", {
-      expires: 1,
-      path: "/",
-    });
+    setToken("mock-admin-token-xxx", 1);
 
-    router.replace("/dashboard");
+    router.replace(DASHBOARD_PATH);
   };
 
   return (
