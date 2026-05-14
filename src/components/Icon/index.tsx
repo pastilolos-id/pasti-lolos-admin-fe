@@ -10,6 +10,8 @@ const svg24IconNames = [
   "door",
   "people-circle-fill",
   "exam-multiple-choice",
+  /** Path `eye-open` berada di grid 24×24; tanpa ini viewBox 41×41 membuat ikon tampil kecil. */
+  "eye-open",
 ] as const;
 
 type Svg24IconName = (typeof svg24IconNames)[number];

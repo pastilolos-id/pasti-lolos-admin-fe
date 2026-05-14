@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui";
+import { cn } from "@/lib/utils";
 
 import type { TableCoulmnType, TableDataType } from "./types";
 
@@ -15,6 +16,8 @@ type TableProps = {
   data: TableDataType[];
   caption?: string;
   withNumber?: boolean;
+  /** Kelas tambahan pada `<thead>`. */
+  headerClassName?: string;
 } & React.ComponentProps<"table">;
 
 export default function Table({
@@ -22,11 +25,14 @@ export default function Table({
   data,
   caption,
   withNumber,
+  headerClassName,
+  className,
+  ...tableProps
 }: TableProps) {
   return (
-    <TableContainer>
+    <TableContainer className={className} {...tableProps}>
       {caption && <TableCaption>{caption}</TableCaption>}
-      <TableHeader>
+      <TableHeader className={headerClassName}>
         <TableRow>
           {withNumber && <TableHead className="w-1/12">No</TableHead>}
           {columns.map((column) => (
@@ -47,9 +53,11 @@ export default function Table({
               <TableCell
                 key={column.accessorKey}
                 textPosition={column.textPosition}
-                className="font-medium"
+                className={cn(column.className, !column.cell && "font-medium")}
               >
-                {(row as TableDataType)[column.accessorKey]}
+                {column.cell
+                  ? column.cell(row as TableDataType, index)
+                  : (row as TableDataType)[column.accessorKey]}
               </TableCell>
             ))}
           </TableRow>

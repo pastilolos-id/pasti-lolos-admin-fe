@@ -3,9 +3,12 @@ import type { IconProps } from "@/components/Icon";
 type SummaryCardType = {
   label: string;
   value: string;
-  trendPercent: number;
+  /** Jika diisi, persentase perubahan ditampilkan di bawah nilai. */
+  trendPercent?: number;
   icon: IconProps["name"];
   iconBgClass: string;
+  /** Kelas tambahan pada kartu (mis. radius/border khusus halaman). */
+  className?: string;
 };
 
 const summaryCardsData: SummaryCardType[] = [

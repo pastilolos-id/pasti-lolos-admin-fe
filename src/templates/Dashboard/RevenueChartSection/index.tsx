@@ -8,7 +8,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { cn } from "@/lib/utils";
+import { cn, formatIdr } from "@/lib/utils";
 import {
   type RevenueFilterTab,
   revenueDataMap,
@@ -33,15 +33,6 @@ function formatCurrency(value: number) {
     return `${(value / 1_000).toFixed(0)}rb`;
   }
   return value.toString();
-}
-
-function formatFullCurrency(value: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value);
 }
 
 export default function RevenueChartSection() {
@@ -75,12 +66,10 @@ export default function RevenueChartSection() {
 
       <div>
         <p className="text-c1 text-neutral-5">Total Penjualan</p>
-        <p className="text-h4 text-neutral-6">
-          {formatFullCurrency(totalRevenue)}
-        </p>
+        <p className="text-h4 text-neutral-6">{formatIdr(totalRevenue)}</p>
       </div>
 
-      <ChartContainer config={chartConfig} className="h-[220px] w-full">
+      <ChartContainer config={chartConfig} className="h-55 w-full">
         <BarChart data={chartData} barCategoryGap="20%">
           <CartesianGrid vertical={false} strokeDasharray="3 3" />
           <XAxis
@@ -100,7 +89,7 @@ export default function RevenueChartSection() {
           <ChartTooltip
             content={
               <ChartTooltipContent
-                formatter={(value) => formatFullCurrency(value as number)}
+                formatter={(value) => formatIdr(value as number)}
               />
             }
           />

@@ -41,6 +41,13 @@ const buttonVariants = cva(
   },
 );
 
+type ButtonProps = React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    text?: string;
+    asChild?: boolean;
+    isLoading?: boolean;
+  };
+
 function Button({
   className,
   variant = "default",
@@ -49,12 +56,7 @@ function Button({
   asChild = false,
   isLoading = false,
   ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    text?: string;
-    asChild?: boolean;
-    isLoading?: boolean;
-  }) {
+}: ButtonProps) {
   if (asChild) {
     return (
       <Slot.Root
@@ -96,4 +98,4 @@ function Button({
   );
 }
 
-export { Button, buttonVariants };
+export { Button, buttonVariants, type ButtonProps };
