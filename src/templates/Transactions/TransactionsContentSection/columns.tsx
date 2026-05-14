@@ -1,21 +1,27 @@
 import type { TableCoulmnType, TableDataType } from "@/components/Table/types";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import type { RowDisplayStatus, TransactionRow } from "../types";
+import type { TransactionDisplayStatus, TransactionRow } from "../types";
 import { TransactionActionsCell } from "./TransactionActionsCell";
 import { TransferProofCell } from "./TransferProofCell";
 
-const statusLabel: Record<RowDisplayStatus, string> = {
-  aktif: "Aktif",
-  tidak_aktif: "Tidak Aktif",
+const statusLabel: Record<TransactionDisplayStatus, string> = {
+  berhasil: "Berhasil",
+  gagal: "Gagal",
+  kadaluarsa: "Kadaluarsa",
+  menunggu: "Menunggu",
 };
 
-function statusPillClass(status: RowDisplayStatus): string {
+function statusPillClass(status: TransactionDisplayStatus): string {
   switch (status) {
-    case "aktif":
-      return "border-transparent bg-[#50AD54] text-white hover:bg-[#50AD54]/90";
+    case "berhasil":
+      return "border-transparent bg-green text-neutral-1 hover:bg-green/90";
+    case "gagal":
+      return "border-transparent bg-red text-neutral-1 hover:bg-red/90";
+    case "kadaluarsa":
+      return "border-transparent bg-neutral-4 text-neutral-1 hover:bg-neutral-4/90";
     default:
-      return "border-transparent bg-[#BEBEBE] text-white hover:bg-[#BEBEBE]/90";
+      return "border-transparent bg-yellow text-neutral-6 hover:bg-yellow/90";
   }
 }
 

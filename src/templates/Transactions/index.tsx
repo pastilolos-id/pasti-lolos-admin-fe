@@ -22,7 +22,7 @@ function summarizeAll(): TransactionsSummary {
   let success = 0;
   let pending = 0;
   for (const r of rows) {
-    if (r.displayStatus === "aktif") {
+    if (r.displayStatus === "berhasil") {
       success += 1;
     } else {
       pending += 1;

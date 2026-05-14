@@ -1,4 +1,4 @@
-import type { RowDisplayStatus, TransactionRow } from "./types";
+import type { TransactionDisplayStatus, TransactionRow } from "./types";
 
 function toDMY(iso: string): string {
   const [y, m, d] = iso.split("-");
@@ -46,15 +46,15 @@ const isoDates = [
   "2026-02-14",
 ];
 
-const statusCycle: RowDisplayStatus[] = [
-  "aktif",
-  "aktif",
-  "tidak_aktif",
-  "aktif",
-  "aktif",
-  "tidak_aktif",
-  "aktif",
-  "tidak_aktif",
+const statusCycle: TransactionDisplayStatus[] = [
+  "berhasil",
+  "berhasil",
+  "gagal",
+  "berhasil",
+  "berhasil",
+  "menunggu",
+  "berhasil",
+  "kadaluarsa",
 ];
 
 export const transactionsMock: TransactionRow[] = Array.from(
@@ -63,7 +63,8 @@ export const transactionsMock: TransactionRow[] = Array.from(
     const buyer = buyers[i % buyers.length] ?? buyers[0];
     const iso = isoDates[i % isoDates.length] ?? "2026-01-01";
     const amountIdr = 60000 + (i % 7) * 15000 + (i % 4) * 25000;
-    const displayStatus = statusCycle[i % statusCycle.length] ?? "aktif";
+    const displayStatus =
+      statusCycle[i % statusCycle.length] ?? "menunggu";
     const codeNum = 40220 + i;
     return {
       id: `trx-${i + 1}`,
