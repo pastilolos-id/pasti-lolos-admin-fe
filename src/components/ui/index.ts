@@ -5,6 +5,7 @@ export * from "./button";
 export * from "./chart";
 export * from "./checkbox";
 export * from "./collapsible";
+export * from "./dropdown-menu";
 export * from "./field";
 export * from "./input";
 export * from "./input-group";
