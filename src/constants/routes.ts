@@ -1,4 +1,4 @@
-/** Default destination after successful auth (mock or real). */
+/** Default destination after successful auth. */
 export const DASHBOARD_PATH = "/dashboard";
 
 export const LOGIN_PATH = "/login";

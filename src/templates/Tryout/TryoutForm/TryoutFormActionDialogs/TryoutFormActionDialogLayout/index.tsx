@@ -77,11 +77,11 @@ export default function TryoutFormActionDialogLayout({
               <Button
                 key={action.label}
                 type="button"
-                variant="ghost"
+                variant="default"
                 onClick={action.onClick}
                 className={cn(
-                  "min-h-0 flex-1 rounded-full px-4 text-s1 font-semibold shadow-none",
-                  "py-3",
+                  "min-h-0 flex-1 rounded-full px-4 text-sm font-semibold",
+                  "py-2",
                   action.appearance === "solid" &&
                     "border-0 bg-white text-neutral-6 hover:bg-white/90 hover:text-neutral-6",
                   action.appearance === "outline" &&

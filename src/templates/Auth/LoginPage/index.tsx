@@ -1,28 +1,46 @@
 "use client";
 
-import { AlertCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Form, type FormHandle } from "@/components";
-import { Alert, AlertDescription, AlertTitle, Button } from "@/components/ui";
-import { isValidMockSessionToken } from "@/constants/auth";
+import { Button } from "@/components/ui";
 import { DASHBOARD_PATH, LOGIN_PATH } from "@/constants/routes";
-import { getToken, setToken } from "@/lib/cookies/tokenCookies";
+import { useLoginMutation, useLogoutMutation } from "@/lib/auth/authQuery";
+import {
+  applyLoginFieldErrors,
+  mapApiUserToAuthUser,
+  normalizeLoginPayload,
+} from "@/lib/auth/login-form-utils";
+import { parseLoginError } from "@/lib/auth/parseLoginError";
+import { ADMIN_ROLE_ID } from "@/lib/auth/types";
+import { removeToken } from "@/lib/cookies/tokenCookies";
+import { useAuthStore } from "@/lib/store/auth-store";
+import TryoutFormActionDialogLayout, {
+  type TryoutFormActionDialogAction,
+} from "@/templates/Tryout/TryoutForm/TryoutFormActionDialogs/TryoutFormActionDialogLayout";
 import AuthLeftSection from "../LeftSection";
 import { loginInputData } from "./inputData";
+
+type LoginDialogKind = "error" | "not-admin" | null;
+
+const NOT_ADMIN_MESSAGE =
+  "Anda bukan admin. Halaman ini hanya dapat diakses oleh akun admin.";
+
+const GENERIC_ERROR_MESSAGE = "Terjadi kesalahan. Silakan coba lagi.";
 
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const formRef = useRef<FormHandle>(null);
-  const [globalMessage, setGlobalMessage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const setUser = useAuthStore((state) => state.setUser);
+  const clearUser = useAuthStore((state) => state.clearUser);
 
-  useEffect(() => {
-    if (isValidMockSessionToken(getToken())) {
-      router.replace(DASHBOARD_PATH);
-    }
-  }, [router]);
+  const [dialogKind, setDialogKind] = useState<LoginDialogKind>(null);
+  const [dialogMessage, setDialogMessage] = useState("");
+
+  const { mutateAsync: loginUser, isPending: isLoginPending } =
+    useLoginMutation();
+  const { mutateAsync: logoutUser } = useLogoutMutation();
 
   useEffect(() => {
     const errorFromQuery = searchParams.get("error");
@@ -31,88 +49,124 @@ export default function LoginPage() {
     }
     const raw = errorFromQuery.trim();
     try {
-      setGlobalMessage(decodeURIComponent(raw.replace(/\+/g, " ")));
+      setDialogMessage(decodeURIComponent(raw.replace(/\+/g, " ")));
     } catch {
-      setGlobalMessage(raw.replace(/\+/g, " "));
+      setDialogMessage(raw.replace(/\+/g, " "));
     }
+    setDialogKind("error");
     router.replace(LOGIN_PATH, { scroll: false });
   }, [searchParams, router]);
 
-  const handleOnClickGoogleButton = () => {
-    setGlobalMessage(null);
-    formRef.current?.clearErrors();
-  };
+  const closeDialog = useCallback(() => {
+    setDialogKind(null);
+    setDialogMessage("");
+  }, []);
 
   const handleOnSubmitForm = async (payload: Record<string, unknown>) => {
-    setGlobalMessage(null);
+    closeDialog();
     formRef.current?.clearErrors();
-    setIsLoading(true);
 
-    const email = payload.email as string;
-    const password = payload.password as string;
+    const body = normalizeLoginPayload(payload);
 
-    if (email === "user@gmail.com") {
-      const userAppUrl = process.env.NEXT_PUBLIC_USER_APP_URL;
-      if (userAppUrl) {
-        window.location.href = userAppUrl;
+    try {
+      const res = await loginUser(body);
+
+      if (res.user.userRoleId !== ADMIN_ROLE_ID) {
+        try {
+          await logoutUser();
+        } catch {
+          // Session cleanup best-effort
+        }
+        clearUser();
+        removeToken();
+        setDialogMessage(NOT_ADMIN_MESSAGE);
+        setDialogKind("not-admin");
+        return;
       }
-      setIsLoading(false);
-      return;
+
+      setUser(mapApiUserToAuthUser(res.user));
+      router.replace(DASHBOARD_PATH);
+    } catch (err) {
+      const parsed = parseLoginError(err);
+
+      if (parsed?.message?.trim()) {
+        setDialogMessage(parsed.message.trim());
+        setDialogKind("error");
+      }
+
+      if (parsed?.errors && formRef.current) {
+        applyLoginFieldErrors(formRef.current.setError, parsed.errors);
+      }
+
+      if (
+        !parsed?.message?.trim() &&
+        (!parsed?.errors || Object.keys(parsed.errors).length === 0)
+      ) {
+        setDialogMessage(GENERIC_ERROR_MESSAGE);
+        setDialogKind("error");
+      }
     }
-
-    const isEmailValid = email === "admin@gmail.com";
-    const isPasswordValid = password === "admin123";
-
-    if (!isEmailValid || !isPasswordValid) {
-      if (!isEmailValid) {
-        formRef.current?.setError("email", {
-          type: "manual",
-          message: "Email salah",
-        });
-      }
-      if (!isPasswordValid) {
-        formRef.current?.setError("password", {
-          type: "manual",
-          message: "Password salah",
-        });
-      }
-      setIsLoading(false);
-      return;
-    }
-
-    setToken("mock-admin-token-xxx", 1);
-
-    router.replace(DASHBOARD_PATH);
   };
 
-  return (
-    <AuthLeftSection
-      title="Masuk"
-      googleButton={{
-        onClick: handleOnClickGoogleButton,
-        text: "Masuk Dengan Akun Google",
-      }}
-    >
-      {globalMessage ? (
-        <Alert variant="destructive" className="col-span-12 mb-4">
-          <AlertCircle className="col-start-1 row-start-1" aria-hidden />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{globalMessage}</AlertDescription>
-        </Alert>
-      ) : null}
+  const userAppUrl = process.env.NEXT_PUBLIC_USER_APP_URL?.trim() ?? "";
 
-      <Form
-        ref={formRef}
-        inputData={loginInputData}
-        onSubmitForm={handleOnSubmitForm}
-      >
-        <Button
-          isLoading={isLoading}
-          text="Masuk"
-          type="submit"
-          className="col-span-12 mt-6"
-        />
-      </Form>
-    </AuthLeftSection>
+  const dialogActions: TryoutFormActionDialogAction[] =
+    dialogKind === "not-admin"
+      ? [
+          {
+            label: "OK",
+            appearance: "solid",
+            onClick: closeDialog,
+          },
+          ...(userAppUrl
+            ? [
+                {
+                  label: "Ke Website User",
+                  appearance: "outline" as const,
+                  onClick: () => {
+                    window.location.href = userAppUrl;
+                  },
+                },
+              ]
+            : []),
+        ]
+      : [
+          {
+            label: "OK",
+            appearance: "solid",
+            onClick: closeDialog,
+          },
+        ];
+
+  return (
+    <>
+      <AuthLeftSection title="Masuk">
+        <Form
+          ref={formRef}
+          inputData={loginInputData}
+          onSubmitForm={handleOnSubmitForm}
+        >
+          <Button
+            isLoading={isLoginPending}
+            text="Masuk"
+            type="submit"
+            className="col-span-12 mt-6"
+          />
+        </Form>
+      </AuthLeftSection>
+
+      <TryoutFormActionDialogLayout
+        open={dialogKind !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            closeDialog();
+          }
+        }}
+        tone="destructive"
+        iconName="slash-circle"
+        message={dialogMessage}
+        actions={dialogActions}
+      />
+    </>
   );
 }

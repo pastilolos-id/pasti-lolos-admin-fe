@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { DetailedHTMLProps, HTMLAttributes } from "react";
-import { Icon } from "@/components";
 import { cn } from "@/lib/utils";
 
 type AuthLeftSectionProps = DetailedHTMLProps<
@@ -8,16 +7,12 @@ type AuthLeftSectionProps = DetailedHTMLProps<
   HTMLDivElement
 > & {
   title: string;
-  googleButton: {
-    onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-    text: string;
-  };
 };
 
 export default function AuthLeftSection({
   title,
-  googleButton,
   className,
+  children,
   ...props
 }: AuthLeftSectionProps) {
   return (
@@ -42,27 +37,11 @@ export default function AuthLeftSection({
 
         {title === "Masuk" && (
           <p className="text-center text-b3 md:text-b1 max-w-80 md:max-w-120 mx-auto">
-            Silahkan masuk dengan email atau akun google yang sudah terdaftar
+            Silahkan masuk dengan email yang sudah terdaftar
           </p>
         )}
 
-        <button
-          type="button"
-          onClick={googleButton.onClick}
-          className={cn(
-            "w-full text-neutral-6 font-bold flex items-center justify-center gap-3 py-3 bg-white rounded-full mx-auto",
-            "hover:cursor-pointer hover:scale-105 transition",
-          )}
-        >
-          <Icon name="google-fullcolor" size={32} />
-          <p>{googleButton.text}</p>
-        </button>
-        <div className="flex items-center gap-1">
-          <div className="bg-white grow h-px"></div>
-          <p className="text-c1">atau menggunakan email</p>
-          <div className="bg-white grow h-px"></div>
-        </div>
-        {props.children}
+        {children}
       </section>
     </div>
   );

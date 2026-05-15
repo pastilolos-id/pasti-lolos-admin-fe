@@ -4,7 +4,9 @@ import { useRouter } from "next/navigation";
 import Icon from "@/components/Icon";
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui";
 import { LOGIN_PATH } from "@/constants/routes";
+import { useLogoutMutation } from "@/lib/auth/authQuery";
 import { removeToken } from "@/lib/cookies/tokenCookies";
+import { useAuthStore } from "@/lib/store/auth-store";
 import { cn } from "@/lib/utils";
 
 export default function LogoutSidebarMenuButton({
@@ -15,13 +17,28 @@ export default function LogoutSidebarMenuButton({
   layout?: "sidebar" | "navbar";
 } = {}) {
   const router = useRouter();
+  const clearUser = useAuthStore((state) => state.clearUser);
+  const { mutateAsync: logoutUser, isPending } = useLogoutMutation();
   const isNavbar = layout === "navbar";
+
+  const handleLogout = async () => {
+    onBeforeLogout?.();
+    try {
+      await logoutUser();
+    } catch {
+      // best-effort server logout
+    }
+    clearUser();
+    removeToken();
+    router.replace(LOGIN_PATH);
+  };
 
   return (
     <SidebarMenuItem>
       <SidebarMenuButton
         type="button"
         tooltip="Keluar"
+        disabled={isPending}
         className={cn(
           "w-full! flex px-2 py-3 group-data-[collapsible=icon]:justify-center",
           isNavbar
@@ -29,9 +46,7 @@ export default function LogoutSidebarMenuButton({
             : "hover:bg-red active:bg-red/70",
         )}
         onClick={() => {
-          onBeforeLogout?.();
-          removeToken();
-          router.replace(LOGIN_PATH);
+          void handleLogout();
         }}
       >
         <Icon size={24} name="door" />
