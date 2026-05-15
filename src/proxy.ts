@@ -2,10 +2,7 @@
 
 import { type NextRequest, NextResponse } from "next/server";
 
-import {
-  AUTH_TOKEN_COOKIE_NAME,
-  hasAuthSessionCookie,
-} from "@/constants/auth";
+import { AUTH_TOKEN_COOKIE_NAME, hasAuthSessionCookie } from "@/constants/auth";
 import {
   DASHBOARD_PATH,
   LOGIN_PATH,
@@ -25,10 +22,7 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (
-    pathnameMatchesAnyPrefix(pathname, PUBLIC_ROUTE_PREFIXES) &&
-    hasSession
-  ) {
+  if (pathnameMatchesAnyPrefix(pathname, PUBLIC_ROUTE_PREFIXES) && hasSession) {
     const url = request.nextUrl.clone();
     url.pathname = DASHBOARD_PATH;
     return NextResponse.redirect(url);

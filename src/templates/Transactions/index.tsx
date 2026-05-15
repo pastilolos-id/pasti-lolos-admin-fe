@@ -4,14 +4,16 @@ import { useMemo, useState } from "react";
 
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { mapTransactionApiItemToRow } from "@/lib/transactions/mapTransaction";
-import { useTransactionsListQuery } from "@/lib/transactions/transactionsQuery";
+import { mapTransactionSummary } from "@/lib/transactions/mapTransactionSummary";
+import {
+  useTransactionsListQuery,
+  useTransactionsSummaryQuery,
+} from "@/lib/transactions/transactionsQuery";
 
-import { transactionsMock } from "./mockData";
 import TransactionsContentSection from "./TransactionsContentSection";
 import { rowsToTableData } from "./TransactionsContentSection/columns";
 import TransactionsEmptySection from "./TransactionsContentSection/TransactionsEmptySection";
 import TransactionsHeaderSection from "./TransactionsHeaderSection";
-import type { TransactionsSummary } from "./TransactionsSummarySection";
 import TransactionsSummarySection from "./TransactionsSummarySection";
 import type { TransactionListFilters } from "./types";
 
@@ -20,25 +22,21 @@ const defaultFilters: TransactionListFilters = {
   pageSize: 10,
 };
 
-function summarizeAll(): TransactionsSummary {
-  const rows = transactionsMock;
-  let success = 0;
-  let pending = 0;
-  for (const r of rows) {
-    if (r.displayStatus === "berhasil") {
-      success += 1;
-    } else {
-      pending += 1;
-    }
-  }
-  return {
-    totalCount: rows.length,
-    successCount: success,
-    pendingCount: pending,
-  };
+function TransactionsSummaryErrorBanner() {
+  return (
+    <div
+      className="rounded-xl border border-[#FF5649]/20 bg-[#FF5649]/8 px-4 py-3"
+      role="alert"
+    >
+      <p className="text-sm font-semibold text-neutral-6">
+        Gagal memuat ringkasan
+      </p>
+      <p className="text-c1 text-neutral-5">
+        Periksa koneksi Anda dan coba lagi.
+      </p>
+    </div>
+  );
 }
-
-const summaryStatic = summarizeAll();
 
 function TransactionsErrorSection() {
   return (
@@ -79,8 +77,19 @@ export default function TransactionsPage() {
     [filters.type, filters.status, debouncedSearch, page, filters.pageSize],
   );
 
+  const {
+    data: summaryData,
+    isLoading: isSummaryLoading,
+    isError: isSummaryError,
+  } = useTransactionsSummaryQuery();
+
   const { data, isLoading, isError, isFetching } =
     useTransactionsListQuery(queryParams);
+
+  const mappedSummary = useMemo(
+    () => (summaryData ? mapTransactionSummary(summaryData) : undefined),
+    [summaryData],
+  );
 
   const rows = useMemo(
     () => (data?.data ?? []).map(mapTransactionApiItemToRow),
@@ -111,7 +120,12 @@ export default function TransactionsPage() {
     <div className="flex flex-col gap-4 lg:gap-6">
       <TransactionsHeaderSection />
 
-      <TransactionsSummarySection summary={summaryStatic} />
+      {isSummaryError ? <TransactionsSummaryErrorBanner /> : null}
+
+      <TransactionsSummarySection
+        isLoading={isSummaryLoading}
+        summary={mappedSummary}
+      />
 
       <TransactionsContentSection
         filters={filters}

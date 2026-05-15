@@ -1,10 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import {
-  AUTH_TOKEN_COOKIE_NAME,
-  hasAuthSessionCookie,
-} from "@/constants/auth";
+import { AUTH_TOKEN_COOKIE_NAME, hasAuthSessionCookie } from "@/constants/auth";
 import { DASHBOARD_PATH, LOGIN_PATH } from "@/constants/routes";
 
 export default async function Home() {

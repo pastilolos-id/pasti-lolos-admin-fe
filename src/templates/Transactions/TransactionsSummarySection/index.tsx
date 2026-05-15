@@ -1,14 +1,22 @@
 import Icon from "@/components/Icon";
+import { Skeleton } from "@/components/ui/skeleton";
+import { transactionsSummaryFallbackCards } from "@/lib/transactions/mapTransactionSummary";
 import { cn } from "@/lib/utils";
 
+export type TransactionSummaryCard = {
+  label: string;
+  value: string | number;
+  trendText: string;
+  trendTone: "up" | "down";
+};
+
 export type TransactionsSummary = {
-  totalCount: number;
-  successCount: number;
-  pendingCount: number;
+  cards: TransactionSummaryCard[];
 };
 
 type TransactionsSummarySectionProps = {
-  summary: TransactionsSummary;
+  summary?: TransactionsSummary;
+  isLoading?: boolean;
 };
 
 type TrendTone = "up" | "down";
@@ -27,17 +35,27 @@ function TrendPill({ text, tone }: { text: string; tone: TrendTone }) {
   );
 }
 
+function StatCardSkeleton() {
+  return (
+    <div className="relative min-h-31 rounded-[23.5px] border border-[#F6F6F6] bg-white p-4 md:p-5">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-8 w-16" />
+          <Skeleton className="h-6 w-36 rounded-full" />
+        </div>
+        <Skeleton className="size-11 shrink-0 rounded-full md:size-12" />
+      </div>
+    </div>
+  );
+}
+
 function StatCard({
   label,
   value,
   trendText,
   trendTone,
-}: {
-  label: string;
-  value: string | number;
-  trendText: string;
-  trendTone: TrendTone;
-}) {
+}: TransactionSummaryCard) {
   return (
     <div className="relative min-h-31 rounded-[23.5px] border border-[#F6F6F6] bg-white p-4 md:p-5">
       <div className="flex items-start justify-between gap-3">
@@ -61,27 +79,23 @@ function StatCard({
 
 export default function TransactionsSummarySection({
   summary,
+  isLoading = false,
 }: TransactionsSummarySectionProps) {
-  const cards = [
-    {
-      label: "Total Transaksi",
-      value: summary.totalCount,
-      trendText: "-2% vs hari sebelumnya",
-      trendTone: "down" as const,
-    },
-    {
-      label: "Transaksi Sukses",
-      value: summary.successCount,
-      trendText: "2% vs hari sebelumnya",
-      trendTone: "up" as const,
-    },
-    {
-      label: "Transaksi Pending",
-      value: summary.pendingCount,
-      trendText: "-2% vs hari sebelumnya",
-      trendTone: "down" as const,
-    },
-  ] as const;
+  if (isLoading) {
+    return (
+      <section
+        className="grid grid-cols-1 gap-3 sm:grid-cols-3"
+        aria-label="Ringkasan transaksi"
+        aria-busy="true"
+      >
+        <StatCardSkeleton />
+        <StatCardSkeleton />
+        <StatCardSkeleton />
+      </section>
+    );
+  }
+
+  const cards = summary?.cards ?? transactionsSummaryFallbackCards;
 
   return (
     <section

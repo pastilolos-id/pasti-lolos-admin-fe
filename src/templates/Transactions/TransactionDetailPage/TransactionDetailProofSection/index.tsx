@@ -71,7 +71,9 @@ export function TransactionDetailProofSection({
                 variant="ghost"
                 size="icon-xs"
                 className="size-9 shrink-0 rounded-full bg-primary-4 text-white hover:bg-primary-4/90 hover:text-white md:size-10"
-                aria-label={proofLabel === "Lihat" ? "Lihat bukti transaksi" : proofLabel}
+                aria-label={
+                  proofLabel === "Lihat" ? "Lihat bukti transaksi" : proofLabel
+                }
                 onClick={() => setOpen(true)}
               >
                 <Icon

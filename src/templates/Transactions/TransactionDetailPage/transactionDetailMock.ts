@@ -40,10 +40,7 @@ function buildDetailFromListRow(
 ): TransactionDetail {
   const provider = PROVIDERS[index % PROVIDERS.length] ?? "BNI";
 
-  const originalPrice = Math.max(
-    row.priceIdr * 2,
-    row.priceIdr + 250_000,
-  );
+  const originalPrice = Math.max(row.priceIdr * 2, row.priceIdr + 250_000);
   const discount = Math.max(originalPrice - row.priceIdr, 0);
 
   return {
@@ -67,15 +64,12 @@ function buildDetailFromListRow(
 /**
  * Ambil detail transaksi (mock). Ganti implementasi ini saat integrasi BE.
  */
-export function getTransactionDetailById(
-  id: string,
-): TransactionDetail | null {
+export function getTransactionDetailById(id: string): TransactionDetail | null {
   const row = transactionsMock.find((r) => r.id === id);
   if (!row) {
     return null;
   }
-  const index =
-    Number.parseInt(row.id.replace(/^trx-/, ""), 10) - 1;
+  const index = Number.parseInt(row.id.replace(/^trx-/, ""), 10) - 1;
   const safeIndex = Number.isFinite(index) && index >= 0 ? index : 0;
   return buildDetailFromListRow(row, safeIndex);
 }

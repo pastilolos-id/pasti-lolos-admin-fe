@@ -1,4 +1,3 @@
-import type { TransactionDetail } from "./transactionDetailTypes";
 import { TransactionDetailBackLink } from "./TransactionDetailBackLink";
 import { TransactionDetailCodeSection } from "./TransactionDetailCodeSection";
 import { TransactionDetailInnerCard } from "./TransactionDetailInnerCard";
@@ -7,9 +6,10 @@ import { TransactionDetailMetaGrid } from "./TransactionDetailMetaGrid";
 import { TransactionDetailPageTitle } from "./TransactionDetailPageTitle";
 import { TransactionDetailProofSection } from "./TransactionDetailProofSection";
 import { TransactionDetailSummarySection } from "./TransactionDetailSummarySection";
+import type { TransactionDetail } from "./transactionDetailTypes";
 
-export type { TransactionDetail } from "./transactionDetailTypes";
 export { getTransactionDetailById } from "./transactionDetailMock";
+export type { TransactionDetail } from "./transactionDetailTypes";
 
 type TransactionDetailPageProps = {
   transaction: TransactionDetail;

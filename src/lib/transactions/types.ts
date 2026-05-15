@@ -36,3 +36,14 @@ export type TransactionsListParams = {
   page?: number;
   limit?: number;
 };
+
+export type TransactionsSummaryMetric = {
+  value: number;
+  changePercent: number;
+};
+
+export type TransactionsSummaryResponse = {
+  totalTransaksi: TransactionsSummaryMetric;
+  transaksiSukses: TransactionsSummaryMetric;
+  transaksiPending: TransactionsSummaryMetric;
+};

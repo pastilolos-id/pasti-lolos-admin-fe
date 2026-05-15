@@ -1,6 +1,10 @@
 import { apiFetch } from "@/lib/auth/api-client";
 
-import type { TransactionsListParams, TransactionsListResponse } from "./types";
+import type {
+  TransactionsListParams,
+  TransactionsListResponse,
+  TransactionsSummaryResponse,
+} from "./types";
 
 function buildQueryString(params: TransactionsListParams): string {
   const searchParams = new URLSearchParams();
@@ -28,6 +32,12 @@ function buildQueryString(params: TransactionsListParams): string {
 export function getTransactions(params: TransactionsListParams = {}) {
   const query = buildQueryString(params);
   return apiFetch<TransactionsListResponse>(`/transactions${query}`, {
+    method: "GET",
+  });
+}
+
+export function getTransactionsSummary() {
+  return apiFetch<TransactionsSummaryResponse>("/transactions/summary", {
     method: "GET",
   });
 }
