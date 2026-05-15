@@ -1,9 +1,12 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
+import TryoutFormActionDialogs, {
+  type TryoutFormActionDialogKind,
+} from "./TryoutFormActionDialogs";
 import TryoutFormFields from "./TryoutFormFields";
 import TryoutFormFooter from "./TryoutFormFooter";
 import TryoutFormHeader from "./TryoutFormHeader";
@@ -25,24 +28,59 @@ export default function TryoutForm(props: TryoutFormProps) {
   const methods = useForm<TryoutFormValues>({ defaultValues });
   const readOnly = props.mode === "view";
 
-  const submit = methods.handleSubmit((data) => {
+  const [dialogActive, setDialogActive] =
+    useState<TryoutFormActionDialogKind>(null);
+
+  const runSaveMock = useCallback((data: TryoutFormValues) => {
     // TODO: POST/PATCH /admin/tryouts — ganti console saat BE siap.
     console.log("TryoutForm submit (mock)", data);
+  }, []);
+
+  const onCreateSubmit = methods.handleSubmit((data) => {
+    runSaveMock(data);
+    setDialogActive("create-success");
   });
 
-  const handleFormSubmit = readOnly
-    ? (event: FormEvent<HTMLFormElement>) => event.preventDefault()
-    : submit;
+  const requestEditSave = useCallback(() => {
+    void methods.trigger().then((valid) => {
+      if (valid) {
+        setDialogActive("edit-save");
+      }
+    });
+  }, [methods]);
 
-  const handleDelete = () => {
-    if (
-      typeof window !== "undefined" &&
-      window.confirm("Hapus tryout ini? (mock — belum terhubung ke BE)")
-    ) {
-      // TODO: DELETE /admin/tryouts/:id
-      console.log("TryoutForm delete (mock)");
+  const confirmEditSave = useCallback(() => {
+    void methods.handleSubmit((data) => {
+      runSaveMock(data);
+    })();
+  }, [methods, runSaveMock]);
+
+  const handleDeleteClick = useCallback(() => {
+    if (props.mode === "edit") {
+      setDialogActive("delete");
     }
-  };
+  }, [props.mode]);
+
+  const confirmDelete = useCallback(() => {
+    // TODO: DELETE /admin/tryouts/:id
+    console.log("TryoutForm delete (mock)");
+  }, []);
+
+  const handleFormSubmit = useCallback(
+    (event: FormEvent<HTMLFormElement>) => {
+      if (readOnly) {
+        event.preventDefault();
+        return;
+      }
+      if (props.mode === "edit") {
+        event.preventDefault();
+        requestEditSave();
+        return;
+      }
+      onCreateSubmit(event);
+    },
+    [readOnly, props.mode, requestEditSave, onCreateSubmit],
+  );
 
   return (
     <FormProvider {...methods}>
@@ -50,7 +88,9 @@ export default function TryoutForm(props: TryoutFormProps) {
         <section className="space-y-6 rounded-card-medium border border-neutral-3 bg-neutral-1 p-4 sm:p-6">
           <TryoutFormHeader
             mode={props.mode}
-            onDeleteClick={props.mode === "edit" ? handleDelete : undefined}
+            onDeleteClick={
+              props.mode === "edit" ? handleDeleteClick : undefined
+            }
           />
           <TryoutFormFields
             control={methods.control}
@@ -58,8 +98,17 @@ export default function TryoutForm(props: TryoutFormProps) {
             readOnly={readOnly}
           />
         </section>
-        <TryoutFormFooter mode={props.mode} />
+        <TryoutFormFooter
+          mode={props.mode}
+          onSaveClick={props.mode === "edit" ? requestEditSave : undefined}
+        />
       </form>
+      <TryoutFormActionDialogs
+        active={dialogActive}
+        onActiveChange={setDialogActive}
+        onEditSaveConfirm={confirmEditSave}
+        onDeleteConfirm={confirmDelete}
+      />
     </FormProvider>
   );
 }
