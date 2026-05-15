@@ -118,6 +118,8 @@ export function getTransactionColumns(): TableCoulmnType[] {
         return (
           <TransactionActionsCell
             id={r.id}
+            orderId={r.orderId}
+            displayStatus={r.displayStatus}
             transactionCode={r.transactionCode}
             buyerEmail={r.buyerEmail}
             priceDisplay={r.priceDisplay}

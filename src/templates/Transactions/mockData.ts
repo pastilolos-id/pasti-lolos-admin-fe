@@ -67,6 +67,7 @@ export const transactionsMock: TransactionRow[] = Array.from(
     const codeNum = 40220 + i;
     return {
       id: `trx-${i + 1}`,
+      orderId: 1000 + i,
       transactionCode: `TRANS${codeNum}`,
       buyerName: buyer.name,
       buyerEmail: buyer.email,

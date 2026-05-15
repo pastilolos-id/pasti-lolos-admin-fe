@@ -25,6 +25,8 @@ export type TransactionApiFilterType = "question_bank" | "exam" | "course";
 
 export type TransactionRow = {
   id: string;
+  /** ID numerik order untuk PATCH approve/reject. */
+  orderId: number;
   /** Kode transaksi untuk tampilan & konfirmasi (contoh: TRANS40220). */
   transactionCode: string;
   buyerName: string;

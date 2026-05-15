@@ -1,9 +1,13 @@
 import { apiFetch } from "@/lib/auth/api-client";
 
 import type {
+  RejectTransactionRequest,
+  RejectTransactionResponse,
   TransactionsListParams,
   TransactionsListResponse,
   TransactionsSummaryResponse,
+  VerifyPaymentRequest,
+  VerifyPaymentResponse,
 } from "./types";
 
 function buildQueryString(params: TransactionsListParams): string {
@@ -40,4 +44,24 @@ export function getTransactionsSummary() {
   return apiFetch<TransactionsSummaryResponse>("/transactions/summary", {
     method: "GET",
   });
+}
+
+export function verifyPayment(orderId: number, body: VerifyPaymentRequest) {
+  return apiFetch<VerifyPaymentResponse>(`/admin/payments/verify/${orderId}`, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+  });
+}
+
+export function rejectTransaction(
+  orderId: number,
+  body: RejectTransactionRequest = {},
+) {
+  return apiFetch<RejectTransactionResponse>(
+    `/admin/transactions/${orderId}/reject`,
+    {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    },
+  );
 }

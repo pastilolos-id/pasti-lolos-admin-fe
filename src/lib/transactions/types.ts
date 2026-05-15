@@ -47,3 +47,35 @@ export type TransactionsSummaryResponse = {
   transaksiSukses: TransactionsSummaryMetric;
   transaksiPending: TransactionsSummaryMetric;
 };
+
+export type VerifyPaymentRequest = {
+  status: "completed";
+};
+
+export type VerifyPaymentResponse = {
+  success: boolean;
+  message: string;
+};
+
+export type RejectTransactionRequest = {
+  rejectionReason?: string;
+};
+
+export type RejectTransactionData = {
+  orderId: number;
+  namaUser: string;
+  emailUser: string;
+  itemName: string;
+  itemType: TransactionApiItemType;
+  grandTotal: number;
+  paymentStatus: string;
+  orderStatus: string;
+  rejectionReason: string | null;
+  ditolakPada: string;
+};
+
+export type RejectTransactionResponse = {
+  success: boolean;
+  message: string;
+  data: RejectTransactionData;
+};

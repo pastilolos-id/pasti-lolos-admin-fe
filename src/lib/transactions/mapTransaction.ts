@@ -46,6 +46,7 @@ export function mapTransactionApiItemToRow(
 
   return {
     id: item.transactionId,
+    orderId: item.orderId,
     transactionCode: item.transactionId,
     buyerName: item.nama,
     buyerEmail: item.email,
