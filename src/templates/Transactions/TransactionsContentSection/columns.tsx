@@ -7,7 +7,7 @@ import { TransferProofCell } from "./TransferProofCell";
 
 const statusLabel: Record<TransactionDisplayStatus, string> = {
   berhasil: "Berhasil",
-  gagal: "Gagal",
+  gagal: "Ditolak",
   kadaluarsa: "Kadaluarsa",
   menunggu: "Menunggu",
 };
@@ -29,16 +29,14 @@ function asRow(row: TableDataType): TransactionRow {
   return row as unknown as TransactionRow;
 }
 
-export function getTransactionColumns(rowOffset: number): TableCoulmnType[] {
+export function getTransactionColumns(): TableCoulmnType[] {
   return [
     {
       accessorKey: "_no",
       title: "No",
       textPosition: "center",
       className: "w-12 min-w-[3rem] align-middle",
-      cell: (_row, rowIndex) => (
-        <span className="tabular-nums">{rowOffset + rowIndex + 1}</span>
-      ),
+      cell: (row) => <span className="tabular-nums">{asRow(row).rowNo}</span>,
     },
     {
       accessorKey: "buyerName",
@@ -73,6 +71,7 @@ export function getTransactionColumns(rowOffset: number): TableCoulmnType[] {
           <TransferProofCell
             rowId={r.id}
             hasProof={r.hasProofThumbnail === 1}
+            proofUrl={r.proofUrl}
           />
         );
       },

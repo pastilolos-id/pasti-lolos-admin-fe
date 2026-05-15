@@ -19,6 +19,10 @@ export type TransactionDisplayStatus =
   | "kadaluarsa"
   | "menunggu";
 
+export type TransactionApiFilterStatus = "pending" | "failed" | "paid";
+
+export type TransactionApiFilterType = "question_bank" | "exam" | "course";
+
 export type TransactionRow = {
   id: string;
   /** Kode transaksi untuk tampilan & konfirmasi (contoh: TRANS40220). */
@@ -27,6 +31,8 @@ export type TransactionRow = {
   buyerEmail: string;
   /** 1 = tampilkan thumbnail bukti (API bisa boolean; disimpan angka agar kompatibel dengan tabel generik). */
   hasProofThumbnail: 0 | 1;
+  proofUrl: string | null;
+  rowNo: number;
   transactionDateIso: string;
   /** Format DD/MM/YYYY untuk tampilan tabel. */
   transactionDateDisplay: string;
@@ -39,4 +45,6 @@ export type TransactionRow = {
 export type TransactionListFilters = {
   search: string;
   pageSize: number;
+  type?: TransactionApiFilterType;
+  status?: TransactionApiFilterStatus;
 };

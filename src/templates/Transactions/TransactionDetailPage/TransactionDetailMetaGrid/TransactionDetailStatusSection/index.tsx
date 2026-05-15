@@ -8,7 +8,7 @@ const statusConfig: Record<
   { label: string; className: string }
 > = {
   berhasil: { label: "Berhasil", className: "bg-green text-neutral-1" },
-  gagal: { label: "Gagal", className: "bg-red text-neutral-1" },
+  gagal: { label: "Ditolak", className: "bg-red text-neutral-1" },
   kadaluarsa: {
     label: "Kadaluarsa",
     className: "bg-neutral-4 text-neutral-1",

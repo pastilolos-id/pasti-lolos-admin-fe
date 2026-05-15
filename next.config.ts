@@ -8,6 +8,18 @@ const backendProxyTarget =
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+    ],
+  },
   async rewrites() {
     if (!backendProxyTarget.startsWith("http")) return [];
     return [

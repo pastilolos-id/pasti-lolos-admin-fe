@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
-import { rowsToTableData } from "./TransactionsContentSection/columns";
-import { filterTransactions, paginateSlice, totalPages } from "./TransactionsContentSection/filterUtils";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { mapTransactionApiItemToRow } from "@/lib/transactions/mapTransaction";
+import { useTransactionsListQuery } from "@/lib/transactions/transactionsQuery";
+
 import { transactionsMock } from "./mockData";
 import TransactionsContentSection from "./TransactionsContentSection";
+import { rowsToTableData } from "./TransactionsContentSection/columns";
 import TransactionsEmptySection from "./TransactionsContentSection/TransactionsEmptySection";
 import TransactionsHeaderSection from "./TransactionsHeaderSection";
 import type { TransactionsSummary } from "./TransactionsSummarySection";
@@ -37,35 +40,72 @@ function summarizeAll(): TransactionsSummary {
 
 const summaryStatic = summarizeAll();
 
+function TransactionsErrorSection() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-2 py-12 text-center">
+      <p className="text-sm font-semibold text-neutral-6">
+        Gagal memuat data transaksi
+      </p>
+      <p className="text-c1 text-neutral-5">
+        Periksa koneksi Anda dan coba lagi.
+      </p>
+    </div>
+  );
+}
+
+function TransactionsLoadingSection() {
+  return (
+    <div className="flex items-center justify-center py-16">
+      <p className="text-sm font-medium text-neutral-5">Memuat…</p>
+    </div>
+  );
+}
+
 export default function TransactionsPage() {
   const [filters, setFilters] =
     useState<TransactionListFilters>(defaultFilters);
   const [page, setPage] = useState(1);
 
-  const filtered = useMemo(
-    () => filterTransactions(transactionsMock, filters),
-    [filters],
+  const debouncedSearch = useDebouncedValue(filters.search, 400);
+
+  const queryParams = useMemo(
+    () => ({
+      type: filters.type,
+      status: filters.status,
+      search: debouncedSearch.trim() || undefined,
+      page,
+      limit: filters.pageSize,
+    }),
+    [filters.type, filters.status, debouncedSearch, page, filters.pageSize],
   );
 
-  const pages = useMemo(
-    () => totalPages(filtered.length, filters.pageSize),
-    [filtered.length, filters.pageSize],
+  const { data, isLoading, isError, isFetching } =
+    useTransactionsListQuery(queryParams);
+
+  const rows = useMemo(
+    () => (data?.data ?? []).map(mapTransactionApiItemToRow),
+    [data?.data],
   );
 
-  useEffect(() => {
-    setPage((p) => Math.min(Math.max(1, p), pages));
-  }, [pages]);
+  const tableData = useMemo(() => rowsToTableData(rows), [rows]);
 
-  const pageRows = useMemo(
-    () => paginateSlice(filtered, page, filters.pageSize),
-    [filtered, page, filters.pageSize],
-  );
+  const meta = data?.meta;
+  const totalPages = meta?.totalPages ?? 1;
+  const totalItems = meta?.total ?? 0;
+  const currentPage = meta?.page ?? page;
+  const pageSize = meta?.limit ?? filters.pageSize;
 
-  const rowNumberOffset = (page - 1) * filters.pageSize;
+  const showTable = !isLoading && !isError && rows.length > 0;
+  const showEmpty = !isLoading && !isError && rows.length === 0;
 
-  const tableData = useMemo(() => rowsToTableData(pageRows), [pageRows]);
-
-  const hasRows = filtered.length > 0;
+  let contentSlot = <TransactionsEmptySection />;
+  if (isLoading || (isFetching && !data)) {
+    contentSlot = <TransactionsLoadingSection />;
+  } else if (isError) {
+    contentSlot = <TransactionsErrorSection />;
+  } else if (showEmpty) {
+    contentSlot = <TransactionsEmptySection />;
+  }
 
   return (
     <div className="flex flex-col gap-4 lg:gap-6">
@@ -83,14 +123,13 @@ export default function TransactionsPage() {
           setPage(1);
         }}
         tableRows={tableData}
-        showTable={hasRows}
-        page={page}
-        totalPages={pages}
-        totalItems={filtered.length}
-        pageSize={filters.pageSize}
-        rowNumberOffset={rowNumberOffset}
+        showTable={showTable}
+        page={currentPage}
+        totalPages={totalPages}
+        totalItems={totalItems}
+        pageSize={pageSize}
         onPageChange={setPage}
-        emptySlot={<TransactionsEmptySection />}
+        emptySlot={contentSlot}
       />
     </div>
   );

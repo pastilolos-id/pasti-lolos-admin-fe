@@ -3,7 +3,7 @@
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useId, useState } from "react";
-import transferProofExample from "@/assets/img/transfer-proof-example.jpg";
+
 import Icon from "@/components/Icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -11,11 +11,17 @@ import { cn } from "@/lib/utils";
 type TransferProofCellProps = {
   rowId: string;
   hasProof: boolean;
+  proofUrl?: string | null;
 };
 
-export function TransferProofCell({ rowId, hasProof }: TransferProofCellProps) {
+export function TransferProofCell({
+  rowId,
+  hasProof,
+  proofUrl,
+}: TransferProofCellProps) {
   const [open, setOpen] = useState(false);
   const titleId = useId();
+  const imageSrc = proofUrl?.trim() || null;
 
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") {
@@ -36,7 +42,7 @@ export function TransferProofCell({ rowId, hasProof }: TransferProofCellProps) {
     };
   }, [open, onKeyDown]);
 
-  if (!hasProof) {
+  if (!hasProof || !imageSrc) {
     return <span className="text-c1 text-neutral-5">—</span>;
   }
 
@@ -54,9 +60,10 @@ export function TransferProofCell({ rowId, hasProof }: TransferProofCellProps) {
           onClick={() => setOpen(true)}
         >
           <Image
-            src={transferProofExample}
+            src={imageSrc}
             alt=""
             fill
+            unoptimized
             sizes="(max-width: 768px) 36px, 42px"
             className="object-cover"
             priority={false}
@@ -101,9 +108,10 @@ export function TransferProofCell({ rowId, hasProof }: TransferProofCellProps) {
             <div className="relative w-full max-h-[min(88vh,40rem)] overflow-hidden rounded-3xl bg-black/20 shadow-2xl ring-1 ring-white/20">
               <div className="relative aspect-3/4 w-full max-h-[min(88vh,40rem)] min-h-0">
                 <Image
-                  src={transferProofExample}
+                  src={imageSrc}
                   alt="Bukti transfer"
                   fill
+                  unoptimized
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 512px"
                   className="object-contain"
                   priority

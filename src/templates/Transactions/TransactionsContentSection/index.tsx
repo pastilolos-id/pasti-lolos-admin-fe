@@ -1,11 +1,10 @@
 import type { ReactNode } from "react";
 
 import type { TableDataType } from "@/components/Table/types";
-
+import type { TransactionListFilters } from "../types";
 import TransactionsFiltersSection from "./TransactionsFiltersSection";
 import TransactionsPaginationSection from "./TransactionsPaginationSection";
 import TransactionsTableSection from "./TransactionsTableSection";
-import type { TransactionListFilters } from "../types";
 
 type TransactionsContentSectionProps = {
   filters: TransactionListFilters;
@@ -16,7 +15,6 @@ type TransactionsContentSectionProps = {
   totalPages: number;
   totalItems: number;
   pageSize: number;
-  rowNumberOffset: number;
   onPageChange: (page: number) => void;
   /** Konten ketika tidak ada baris (tetap di dalam panel putih). */
   emptySlot?: ReactNode;
@@ -31,7 +29,6 @@ export default function TransactionsContentSection({
   totalPages,
   totalItems,
   pageSize,
-  rowNumberOffset,
   onPageChange,
   emptySlot,
 }: TransactionsContentSectionProps) {
@@ -46,10 +43,7 @@ export default function TransactionsContentSection({
 
       {showTable ? (
         <>
-          <TransactionsTableSection
-            rows={tableRows}
-            rowNumberOffset={rowNumberOffset}
-          />
+          <TransactionsTableSection rows={tableRows} />
           <TransactionsPaginationSection
             page={page}
             totalPages={totalPages}

@@ -63,8 +63,7 @@ export const transactionsMock: TransactionRow[] = Array.from(
     const buyer = buyers[i % buyers.length] ?? buyers[0];
     const iso = isoDates[i % isoDates.length] ?? "2026-01-01";
     const amountIdr = 60000 + (i % 7) * 15000 + (i % 4) * 25000;
-    const displayStatus =
-      statusCycle[i % statusCycle.length] ?? "menunggu";
+    const displayStatus = statusCycle[i % statusCycle.length] ?? "menunggu";
     const codeNum = 40220 + i;
     return {
       id: `trx-${i + 1}`,
@@ -72,6 +71,8 @@ export const transactionsMock: TransactionRow[] = Array.from(
       buyerName: buyer.name,
       buyerEmail: buyer.email,
       hasProofThumbnail: i % 5 !== 2 ? 1 : 0,
+      proofUrl: i % 5 !== 2 ? "https://example.com/proof.png" : null,
+      rowNo: i + 1,
       transactionDateIso: iso,
       transactionDateDisplay: toDMY(iso),
       priceIdr: amountIdr,

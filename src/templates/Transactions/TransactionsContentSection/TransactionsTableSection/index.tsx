@@ -7,17 +7,12 @@ import { getTransactionColumns } from "../columns";
 
 type TransactionsTableSectionProps = {
   rows: TableDataType[];
-  rowNumberOffset: number;
 };
 
 export default function TransactionsTableSection({
   rows,
-  rowNumberOffset,
 }: TransactionsTableSectionProps) {
-  const columns = useMemo(
-    () => getTransactionColumns(rowNumberOffset),
-    [rowNumberOffset],
-  );
+  const columns = useMemo(() => getTransactionColumns(), []);
 
   return (
     <section
