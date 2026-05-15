@@ -3,6 +3,7 @@ import { apiFetch } from "@/lib/auth/api-client";
 import type {
   RejectTransactionRequest,
   RejectTransactionResponse,
+  TransactionDetailResponse,
   TransactionsListParams,
   TransactionsListResponse,
   TransactionsSummaryResponse,
@@ -42,6 +43,12 @@ export function getTransactions(params: TransactionsListParams = {}) {
 
 export function getTransactionsSummary() {
   return apiFetch<TransactionsSummaryResponse>("/transactions/summary", {
+    method: "GET",
+  });
+}
+
+export function getTransactionDetail(orderId: number) {
+  return apiFetch<TransactionDetailResponse>(`/transactions/${orderId}`, {
     method: "GET",
   });
 }

@@ -1,5 +1,7 @@
 import { ApiError } from "@/lib/auth/api-client";
 
+import { isTransactionNotFoundError } from "./resolveTransactionOrderId";
+
 const GENERIC_ERROR_MESSAGE = "Terjadi kesalahan. Silakan coba lagi.";
 
 function messageFromBody(data: unknown): string | null {
@@ -19,6 +21,10 @@ function messageFromBody(data: unknown): string | null {
 }
 
 export function parseTransactionApiError(error: unknown): string {
+  if (isTransactionNotFoundError(error)) {
+    return error.message;
+  }
+
   if (error instanceof ApiError) {
     const fromBody = messageFromBody(error.data);
     if (fromBody) {

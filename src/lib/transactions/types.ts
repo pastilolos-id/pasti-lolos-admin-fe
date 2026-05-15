@@ -79,3 +79,39 @@ export type RejectTransactionResponse = {
   message: string;
   data: RejectTransactionData;
 };
+
+export type TransactionDetailItemApi = {
+  id: number;
+  itemType: TransactionApiItemType;
+  itemId: number;
+  itemName: string;
+  pricePerItem: string | number;
+  totalPrice: string | number;
+};
+
+export type TransactionDetailPaymentApi = {
+  id: number;
+  paymentStatus: string;
+  receiptUrl: string | null;
+  paymentDate: string;
+  transactionId: string;
+  amount: string | number;
+  paymentMethod: string;
+};
+
+export type TransactionDetailResponse = {
+  orderId: number;
+  namaUser: string;
+  emailUser: string;
+  profilePicture: string | null;
+  orderStatus: string;
+  paymentStatus: TransactionApiStatus | string;
+  totalAmount: number;
+  discountAmount: number;
+  grandTotal: number;
+  couponCode: string | null;
+  tanggalTransaksi: string;
+  items: TransactionDetailItemApi[];
+  payments: TransactionDetailPaymentApi[];
+  notes: string | null;
+};

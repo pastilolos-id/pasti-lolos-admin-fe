@@ -18,12 +18,15 @@ const statusConfig: Record<
 
 type TransactionDetailStatusSectionProps = {
   detailStatus: TransactionDetailStatus;
+  notes?: string | null;
 };
 
 export function TransactionDetailStatusSection({
   detailStatus,
+  notes,
 }: TransactionDetailStatusSectionProps) {
   const status = statusConfig[detailStatus];
+  const notesText = notes?.trim();
 
   return (
     <section>
@@ -37,6 +40,9 @@ export function TransactionDetailStatusSection({
       >
         {status.label}
       </Badge>
+      {notesText ? (
+        <p className="mt-2 text-b2 text-neutral-5">{notesText}</p>
+      ) : null}
     </section>
   );
 }

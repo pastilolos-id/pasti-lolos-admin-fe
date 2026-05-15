@@ -4,24 +4,25 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useId, useState } from "react";
 
-import transferProofExample from "@/assets/img/transfer-proof-example.jpg";
 import Icon from "@/components/Icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type TransactionDetailProofSectionProps = {
-  proofLabel: string;
+  proofUrl: string | null;
   hasProof: boolean;
   rowId: string;
 };
 
 export function TransactionDetailProofSection({
-  proofLabel,
+  proofUrl,
   hasProof,
   rowId,
 }: TransactionDetailProofSectionProps) {
   const [open, setOpen] = useState(false);
   const titleId = useId();
+  const imageSrc = proofUrl?.trim() || null;
+  const showProof = hasProof && Boolean(imageSrc);
 
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") {
@@ -47,7 +48,7 @@ export function TransactionDetailProofSection({
       <h2 className="mb-3 text-s1 text-neutral-6">Bukti transaksi</h2>
       <div className="rounded-2xl border border-dashed border-neutral-4 bg-neutral-3 p-3">
         <div className="flex min-h-28 items-center gap-4">
-          {hasProof ? (
+          {showProof && imageSrc ? (
             <div className="flex items-center gap-4">
               <button
                 type="button"
@@ -59,9 +60,10 @@ export function TransactionDetailProofSection({
                 onClick={() => setOpen(true)}
               >
                 <Image
-                  src={transferProofExample}
+                  src={imageSrc}
                   alt=""
                   fill
+                  unoptimized
                   sizes="88px"
                   className="object-cover"
                 />
@@ -71,9 +73,7 @@ export function TransactionDetailProofSection({
                 variant="ghost"
                 size="icon-xs"
                 className="size-9 shrink-0 rounded-full bg-primary-4 text-white hover:bg-primary-4/90 hover:text-white md:size-10"
-                aria-label={
-                  proofLabel === "Lihat" ? "Lihat bukti transaksi" : proofLabel
-                }
+                aria-label="Lihat bukti transaksi"
                 onClick={() => setOpen(true)}
               >
                 <Icon
@@ -86,13 +86,13 @@ export function TransactionDetailProofSection({
           ) : (
             <div className="flex h-24 w-22 flex-col items-center justify-center rounded-2xl border border-dashed border-neutral-4 bg-neutral-2 text-neutral-4">
               <span className="text-h2 leading-none">+</span>
-              <span className="mt-2 text-c1">{proofLabel}</span>
+              <span className="mt-2 text-c1">Belum ada bukti</span>
             </div>
           )}
         </div>
       </div>
 
-      {open && hasProof ? (
+      {open && showProof && imageSrc ? (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8"
           role="presentation"
@@ -115,9 +115,10 @@ export function TransactionDetailProofSection({
             <div className="relative w-full max-h-[min(88vh,40rem)] overflow-hidden rounded-3xl bg-black/20 shadow-2xl ring-1 ring-white/20">
               <div className="relative aspect-3/4 w-full max-h-[min(88vh,40rem)] min-h-0">
                 <Image
-                  src={transferProofExample}
+                  src={imageSrc}
                   alt="Bukti transaksi"
                   fill
+                  unoptimized
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 512px"
                   className="object-contain"
                   priority

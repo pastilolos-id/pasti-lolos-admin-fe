@@ -1,6 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { mapTransactionDetailResponseToUi } from "./mapTransactionDetail";
+import { resolveOrderIdByTransactionId } from "./resolveTransactionOrderId";
 import {
+  getTransactionDetail,
   getTransactions,
   getTransactionsSummary,
   rejectTransaction,
@@ -16,6 +19,8 @@ export const transactionsQueryKeys = {
   list: (params: TransactionsListParams) =>
     ["transactions", "list", params] as const,
   summary: ["transactions", "summary"] as const,
+  detail: (transactionId: string) =>
+    ["transactions", "detail", transactionId] as const,
 };
 
 function invalidateTransactionsQueries(
@@ -26,6 +31,9 @@ function invalidateTransactionsQueries(
   });
   void queryClient.invalidateQueries({
     queryKey: ["transactions", "list"],
+  });
+  void queryClient.invalidateQueries({
+    queryKey: ["transactions", "detail"],
   });
 }
 
@@ -40,6 +48,24 @@ export function useTransactionsSummaryQuery() {
   return useQuery({
     queryKey: transactionsQueryKeys.summary,
     queryFn: getTransactionsSummary,
+  });
+}
+
+export function useTransactionDetailQuery(transactionId: string) {
+  const queryClient = useQueryClient();
+  const trimmedId = transactionId.trim();
+
+  return useQuery({
+    queryKey: transactionsQueryKeys.detail(trimmedId),
+    enabled: Boolean(trimmedId),
+    queryFn: async () => {
+      const orderId = await resolveOrderIdByTransactionId(
+        trimmedId,
+        queryClient,
+      );
+      const response = await getTransactionDetail(orderId);
+      return mapTransactionDetailResponseToUi(response, trimmedId);
+    },
   });
 }
 

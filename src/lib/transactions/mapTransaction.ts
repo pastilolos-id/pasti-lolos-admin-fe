@@ -24,7 +24,7 @@ function formatPriceTable(amountIdr: number): string {
   return `Rp. ${amountIdr.toLocaleString("id-ID")}`;
 }
 
-function mapApiStatusToDisplay(
+export function mapApiStatusToDisplay(
   status: TransactionApiStatus | string,
 ): TransactionDisplayStatus {
   switch (status) {

@@ -43,21 +43,26 @@ function buildDetailFromListRow(
   const originalPrice = Math.max(row.priceIdr * 2, row.priceIdr + 250_000);
   const discount = Math.max(originalPrice - row.priceIdr, 0);
 
+  const proofUrl = row.proofUrl;
+
   return {
     id: row.id,
+    orderId: row.orderId,
     title: PACKAGE_TITLE,
     transactionCode: row.transactionCode,
     provider,
     providerLogo: provider,
+    paymentMethodLabel: provider,
     accountNumber: `0${(310000000 + index).toString().slice(0, 10)}`,
     accountName: row.buyerName,
     transactionTime: formatTransactionTime(row.transactionDateIso, index),
     detailStatus: row.displayStatus,
-    proofLabel: row.hasProofThumbnail === 1 ? "Lihat" : "Upload",
-    hasProof: row.hasProofThumbnail === 1,
+    proofUrl,
+    hasProof: Boolean(proofUrl),
     originalPrice,
     discount,
     price: row.priceIdr,
+    notes: null,
   };
 }
 
