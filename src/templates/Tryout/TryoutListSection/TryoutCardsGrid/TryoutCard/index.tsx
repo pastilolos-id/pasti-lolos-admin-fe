@@ -24,7 +24,10 @@ export default function TryoutCard({ item }: TryoutCardProps) {
   return (
     <Card
       className={cn(
-        "flex min-h-65 flex-col gap-3 rounded-3xl border border-[#EEEEEE] bg-white p-4 shadow-none",
+        "relative flex min-h-65 origin-center scale-100 flex-col gap-3 rounded-3xl border border-[#EEEEEE] bg-white p-4 shadow-none",
+        "transition-transform duration-200 ease-out will-change-transform",
+        "hover:z-10 hover:scale-[1.03]",
+        "active:scale-100",
       )}
     >
       <Link
