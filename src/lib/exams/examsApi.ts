@@ -1,6 +1,10 @@
 import { apiFetch } from "@/lib/auth/api-client";
 
-import type { ExamsListParams, ExamsListResponse } from "./types";
+import type {
+  ExamPackageDetailResponse,
+  ExamsListParams,
+  ExamsListResponse,
+} from "./types";
 
 function buildQueryString(params: ExamsListParams): string {
   const searchParams = new URLSearchParams();
@@ -12,6 +16,12 @@ function buildQueryString(params: ExamsListParams): string {
 export function getExams(params: ExamsListParams) {
   const query = buildQueryString(params);
   return apiFetch<ExamsListResponse>(`/exams${query}`, {
+    method: "GET",
+  });
+}
+
+export function getExamPackageDetail(id: number) {
+  return apiFetch<ExamPackageDetailResponse>(`/exams/package-detail/${id}`, {
     method: "GET",
   });
 }

@@ -1,8 +1,10 @@
 import arrowLeftCircleIcon from "@/assets/icons/arrow-left-circle.svg";
 import discountIcon from "@/assets/icons/discount.svg";
+import examMultipleChoiceOutlineIcon from "@/assets/icons/exam-multiple-choice-outline.svg";
 import eyeClosedIcon from "@/assets/icons/eye-closed.svg";
 import googleFullcolorIcon from "@/assets/icons/google-fullcolor.svg";
 import hamburgerMenuToggleIcon from "@/assets/icons/hamburger-menu-toggle.svg";
+import textBoxEditBlueIcon from "@/assets/icons/text-box-edit-blue.svg";
 
 type IconsType = {
   [key: string]: string;
@@ -29,6 +31,14 @@ const iconImagePath = {
     src: hamburgerMenuToggleIcon,
     alt: "Menu",
   },
+  "exam-multiple-choice-outline": {
+    src: examMultipleChoiceOutlineIcon,
+    alt: "Exam Multiple Choice Outline Icon",
+  },
+  "text-box-edit-blue": {
+    src: textBoxEditBlueIcon,
+    alt: "Text Box Edit Blue Icon",
+  },
 };
 
 const icons: IconsType = {
@@ -53,6 +63,8 @@ const icons: IconsType = {
     "M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16 M11.354 4.646a.5.5 0 0 0-.708 0l-6 6a.5.5 0 0 0 .708.708l6-6a.5.5 0 0 0 0-.708",
   tryout:
     "M10 19.11L12.11 17H7V15H14V15.12L16.12 13H7V11H17V12.12L18.24 10.89C18.72 10.41 19.35 10.14 20.04 10.14C20.37 10.14 20.7 10.21 21 10.33V5C21 4.46957 20.7893 3.96086 20.4142 3.58579C20.0391 3.21071 19.5304 3 19 3H5C3.89 3 3 3.89 3 5V19C3 19.5304 3.21071 20.0391 3.58579 20.4142C3.96086 20.7893 4.46957 21 5 21H10V19.11ZM7 7H17V9H7V7ZM21.7 14.35L20.7 15.35L18.65 13.3L19.65 12.3C19.7528 12.1992 19.891 12.1428 20.035 12.1428C20.179 12.1428 20.3172 12.1992 20.42 12.3L21.7 13.58C21.91 13.79 21.91 14.14 21.7 14.35ZM12 19.94L18.06 13.88L20.11 15.93L14.06 22H12V19.94Z",
+  "time-outlined":
+    "M10.5 9.58518L13.7425 12.8277L13.0359 13.5352L9.50002 9.99935V4.99935H10.5V9.58518ZM10 18.3327C5.39752 18.3327 1.66669 14.6018 1.66669 9.99935C1.66669 5.39685 5.39752 1.66602 10 1.66602C14.6025 1.66602 18.3334 5.39685 18.3334 9.99935C18.3334 14.6018 14.6025 18.3327 10 18.3327ZM10 17.3327C11.9449 17.3327 13.8102 16.5601 15.1855 15.1848C16.5607 13.8095 17.3334 11.9443 17.3334 9.99935C17.3334 8.05443 16.5607 6.18917 15.1855 4.8139C13.8102 3.43863 11.9449 2.66602 10 2.66602C8.0551 2.66602 6.18984 3.43863 4.81457 4.8139C3.4393 6.18917 2.66669 8.05443 2.66669 9.99935C2.66669 11.9443 3.4393 13.8095 4.81457 15.1848C6.18984 16.5601 8.0551 17.3327 10 17.3327Z",
 };
 
 export { icons, type IconsType, iconImagePath };

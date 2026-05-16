@@ -1,21 +1,5 @@
-import { notFound } from "next/navigation";
+import TryoutViewPage from "@/templates/Tryout/TryoutViewPage";
 
-import TryoutForm from "@/templates/Tryout/TryoutForm";
-import { getTryoutFormDetailById } from "@/templates/Tryout/TryoutForm/tryoutFormMock";
-
-type TryoutViewRouteProps = {
-  params: Promise<{ id: string }>;
-};
-
-export default async function TryoutViewRoute({
-  params,
-}: TryoutViewRouteProps) {
-  const { id } = await params;
-  const initialData = getTryoutFormDetailById(decodeURIComponent(id));
-
-  if (!initialData) {
-    notFound();
-  }
-
-  return <TryoutForm key={id} mode="view" initialData={initialData} />;
+export default function TryoutViewRoute() {
+  return <TryoutViewPage />;
 }
