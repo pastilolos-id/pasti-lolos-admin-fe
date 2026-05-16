@@ -1,4 +1,4 @@
-import { tryoutListMock } from "../mockData";
+import type { TryoutListItem } from "../types";
 import type { TryoutFormExamType, TryoutFormValues } from "./tryoutFormTypes";
 
 /** Nilai awal mode create — selaras placeholder desain. */
@@ -18,12 +18,34 @@ export const emptyTryoutFormValues: TryoutFormValues = {
   notes: "",
 };
 
+/** Mock daftar untuk form view/edit hingga GET detail tersedia. */
+const tryoutFormListMock: TryoutListItem[] = [
+  {
+    id: "20",
+    title: "Paket Tryout BUMN 2026",
+    questionCount: 275,
+    durationMinutes: 120,
+    institution: "BUMN",
+    price: 39_000,
+  },
+  {
+    id: "21",
+    title: "Try Out Challenge CPNS",
+    questionCount: 110,
+    durationMinutes: 100,
+    institution: "CPNS",
+    price: 249_000,
+    specialPrice: 199_000,
+    originalPrice: 249_000,
+  },
+];
+
 /**
  * Mock detail form per id daftar tryout.
- * TODO: ganti dengan `GET /admin/tryouts/:id` saat BE siap.
+ * TODO: ganti dengan `GET /exams/get/:id` saat BE siap.
  */
 function buildMockValuesForId(id: string): TryoutFormValues | undefined {
-  const item = tryoutListMock.find((row) => row.id === id);
+  const item = tryoutFormListMock.find((row) => row.id === id);
   if (!item) {
     return undefined;
   }

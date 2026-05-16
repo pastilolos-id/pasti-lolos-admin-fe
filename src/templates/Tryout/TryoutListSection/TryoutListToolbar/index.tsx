@@ -1,4 +1,4 @@
-import type { TryoutInstitutionFilter } from "../../types";
+import type { TryoutInstitution } from "../../types";
 import TryoutCreateButton from "./TryoutCreateButton";
 import TryoutInstansiFilter from "./TryoutInstansiFilter";
 import TryoutSearchField from "./TryoutSearchField";
@@ -6,8 +6,8 @@ import TryoutSearchField from "./TryoutSearchField";
 type TryoutListToolbarProps = {
   search: string;
   onSearchChange: (value: string) => void;
-  institution: TryoutInstitutionFilter;
-  onInstitutionChange: (value: TryoutInstitutionFilter) => void;
+  institution: TryoutInstitution;
+  onInstitutionChange: (value: TryoutInstitution) => void;
 };
 
 export default function TryoutListToolbar({

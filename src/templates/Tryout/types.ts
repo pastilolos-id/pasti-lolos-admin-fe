@@ -1,17 +1,13 @@
 /**
  * Domain Tryout admin — daftar paket tryout.
  *
- * Rencana integrasi BE (contoh):
- * - GET /admin/tryouts?q=&institution= — daftar + filter (query selaras search + institution).
- * - GET /admin/tryouts/stats — agregat "Jumlah Soal" + metrik tren untuk kartu statistik.
- * - Field `editHref` / `createHref` diisi dari konfigurasi route admin setelah endpoint create/update tersedia.
+ * Integrasi BE:
+ * - GET /exams?category=BUMN|CPNS — daftar tryout (filter examType tryout di FE).
+ * - Stats kartu atas masih mock hingga endpoint stats tersedia.
  */
 
 /** Instansi paket — selaras filter "Instansi" di UI. */
 export type TryoutInstitution = "BUMN" | "CPNS";
-
-/** Nilai filter toolbar (termasuk "semua"). */
-export type TryoutInstitutionFilter = "all" | TryoutInstitution;
 
 /** Satu baris daftar tryout di grid kartu. */
 export type TryoutListItem = {
@@ -41,8 +37,8 @@ export type TryoutPageStats = {
   trendPercent: number;
 };
 
-/** State filter klien sebelum integrasi API. */
+/** State filter daftar tryout. */
 export type TryoutListFilters = {
   search: string;
-  institution: TryoutInstitutionFilter;
+  institution: TryoutInstitution;
 };

@@ -8,21 +8,15 @@ import {
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
-import type { TryoutInstitutionFilter } from "../../../types";
+import type { TryoutInstitution } from "../../../types";
 
 type TryoutInstansiFilterProps = {
-  value: TryoutInstitutionFilter;
-  onChange: (value: TryoutInstitutionFilter) => void;
-};
-
-const triggerLabel = (v: TryoutInstitutionFilter) => {
-  if (v === "all") return "Instansi";
-  return v;
+  value: TryoutInstitution;
+  onChange: (value: TryoutInstitution) => void;
 };
 
 export default function TryoutInstansiFilter({
@@ -41,7 +35,7 @@ export default function TryoutInstansiFilter({
             "justify-between gap-2",
           )}
         >
-          <span className="truncate">{triggerLabel(value)}</span>
+          <span className="truncate">{value}</span>
           <ChevronDown className="size-4 shrink-0 text-neutral-5" aria-hidden />
         </Button>
       </DropdownMenuTrigger>
@@ -51,15 +45,8 @@ export default function TryoutInstansiFilter({
       >
         <DropdownMenuRadioGroup
           value={value}
-          onValueChange={(v) => onChange(v as TryoutInstitutionFilter)}
+          onValueChange={(v) => onChange(v as TryoutInstitution)}
         >
-          <DropdownMenuRadioItem
-            value="all"
-            className="cursor-pointer rounded-xl px-3 py-2.5 text-sm font-semibold text-neutral-6 focus:bg-neutral-2"
-          >
-            Semua
-          </DropdownMenuRadioItem>
-          <DropdownMenuSeparator className="my-1 bg-[#EEEEEE]" />
           <DropdownMenuRadioItem
             value="BUMN"
             className="cursor-pointer rounded-xl px-3 py-2.5 text-sm font-semibold text-neutral-6 focus:bg-neutral-2"

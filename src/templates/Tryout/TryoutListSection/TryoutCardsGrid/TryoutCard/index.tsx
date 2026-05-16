@@ -1,6 +1,7 @@
 "use client";
 
 import { Clock, SquarePen } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import Icon from "@/components/Icon";
@@ -18,6 +19,7 @@ type TryoutCardProps = {
 
 export default function TryoutCard({ item }: TryoutCardProps) {
   const router = useRouter();
+  const viewHref = `/tryout/${item.id}/view`;
 
   return (
     <Card
@@ -25,34 +27,39 @@ export default function TryoutCard({ item }: TryoutCardProps) {
         "flex min-h-65 flex-col gap-3 rounded-3xl border border-[#EEEEEE] bg-white p-4 shadow-none",
       )}
     >
-      <div className="flex items-start justify-between gap-3 border-b border-neutral-3 pb-3">
-        <h3 className="text-h4 font-bold text-neutral-6">{item.title}</h3>
-        <div
-          className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-neutral-3 bg-neutral-1"
-          aria-hidden
-        >
-          <SquarePen className="size-5 text-primary-4" />
+      <Link
+        href={viewHref}
+        className="flex flex-1 cursor-pointer flex-col gap-3 no-underline outline-none focus-visible:ring-2 focus-visible:ring-primary-4 focus-visible:ring-offset-2"
+      >
+        <div className="flex items-start justify-between gap-3 border-b border-neutral-3 pb-3">
+          <h3 className="text-h4 font-bold text-neutral-6">{item.title}</h3>
+          <div
+            className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-neutral-3 bg-neutral-1"
+            aria-hidden
+          >
+            <SquarePen className="size-5 text-primary-4" />
+          </div>
         </div>
-      </div>
 
-      <div className="flex flex-wrap items-center gap-4 text-b3 font-medium text-neutral-5">
-        <div className="flex items-center gap-1.5">
-          <Icon
-            name="exam-multiple-choice"
-            size={20}
-            className="text-neutral-5"
-          />
-          <span>{item.questionCount} Soal</span>
+        <div className="flex flex-wrap items-center gap-4 text-b3 font-medium text-neutral-5">
+          <div className="flex items-center gap-1.5">
+            <Icon
+              name="exam-multiple-choice"
+              size={20}
+              className="text-neutral-5"
+            />
+            <span>{item.questionCount} Soal</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Clock className="size-5 shrink-0 text-neutral-5" aria-hidden />
+            <span>{item.durationMinutes} Menit</span>
+          </div>
         </div>
-        <div className="flex items-center gap-1.5">
-          <Clock className="size-5 shrink-0 text-neutral-5" aria-hidden />
-          <span>{item.durationMinutes} Menit</span>
-        </div>
-      </div>
 
-      <Separator className="bg-neutral-3" />
+        <Separator className="bg-neutral-3" />
 
-      <TryoutCardPricing item={item} />
+        <TryoutCardPricing item={item} />
+      </Link>
 
       <Button
         type="button"

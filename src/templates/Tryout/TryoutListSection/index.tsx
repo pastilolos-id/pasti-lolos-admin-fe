@@ -1,13 +1,19 @@
-import type { TryoutInstitutionFilter, TryoutListItem } from "../types";
+import type { ReactNode } from "react";
+
+import type { TryoutInstitution, TryoutListItem } from "../types";
 import TryoutCardsGrid from "./TryoutCardsGrid";
 import TryoutListToolbar from "./TryoutListToolbar";
 
 type TryoutListSectionProps = {
   search: string;
   onSearchChange: (value: string) => void;
-  institution: TryoutInstitutionFilter;
-  onInstitutionChange: (value: TryoutInstitutionFilter) => void;
+  institution: TryoutInstitution;
+  onInstitutionChange: (value: TryoutInstitution) => void;
   items: TryoutListItem[];
+  isLoading?: boolean;
+  isError?: boolean;
+  loadingSlot?: ReactNode;
+  errorSlot?: ReactNode;
 };
 
 export default function TryoutListSection({
@@ -16,8 +22,14 @@ export default function TryoutListSection({
   institution,
   onInstitutionChange,
   items,
+  isLoading = false,
+  isError = false,
+  loadingSlot,
+  errorSlot,
 }: TryoutListSectionProps) {
   const hasRows = items.length > 0;
+  const showGrid = !isLoading && !isError && hasRows;
+  const showEmpty = !isLoading && !isError && !hasRows;
 
   return (
     <section className="flex flex-col gap-6">
@@ -27,9 +39,10 @@ export default function TryoutListSection({
         institution={institution}
         onInstitutionChange={onInstitutionChange}
       />
-      {hasRows ? (
-        <TryoutCardsGrid items={items} />
-      ) : (
+      {isLoading ? loadingSlot : null}
+      {isError ? errorSlot : null}
+      {showGrid ? <TryoutCardsGrid items={items} /> : null}
+      {showEmpty ? (
         <div className="rounded-2xl border border-dashed border-[#EEEEEE] bg-[#FAFAFA] px-4 py-10 text-center">
           <p className="text-b2 font-semibold text-neutral-6">
             Tidak ada tryout yang cocok
@@ -38,7 +51,7 @@ export default function TryoutListSection({
             Ubah kata kunci atau filter instansi.
           </p>
         </div>
-      )}
+      ) : null}
     </section>
   );
 }
