@@ -16,7 +16,7 @@ export default function TryoutCreateButton() {
     >
       <Link href="/tryout/create">
         <Plus className="size-4 shrink-0" aria-hidden />
-        Buat Tryout
+        Buat Paket Tryout
       </Link>
     </Button>
   );

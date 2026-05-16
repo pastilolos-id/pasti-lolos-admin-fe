@@ -8,6 +8,8 @@ type inputType = {
   description?: string;
   helperText?: string;
   error?: boolean;
+  required?: boolean;
+  defaultValue?: string | number | boolean;
   leftIcon?: IconProps["name"];
   rightIcon?: IconProps["name"];
 };
@@ -29,7 +31,26 @@ export type inputCheckboxType = ComponentProps<"input"> &
     falseValue: string | boolean | number;
   };
 
+export type SelectOption = {
+  value: string;
+  label: string;
+};
+
+export type inputSelectType = inputType & {
+  type: "select";
+  options: SelectOption[];
+  placeholder?: string;
+  disabled?: boolean;
+};
+
+export type inputTextareaType = ComponentProps<"textarea"> &
+  inputType & {
+    type: "textarea";
+  };
+
 export type inputDataType =
   | inputTextFieldType
   | inputPasswordFieldType
-  | inputCheckboxType;
+  | inputCheckboxType
+  | inputSelectType
+  | inputTextareaType;

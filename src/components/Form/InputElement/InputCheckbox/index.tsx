@@ -9,6 +9,7 @@ import {
 } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import type { inputControlType } from "..";
+import { fieldCheckboxClassName } from "../fieldStyles";
 import type { inputCheckboxType } from "../types";
 
 export default function InputCheckBox({
@@ -39,7 +40,7 @@ export default function InputCheckBox({
               }}
               id={input.name}
               name={input.name}
-              className=""
+              className={fieldCheckboxClassName}
               aria-invalid={fieldState.invalid}
             />
             <FieldContent>

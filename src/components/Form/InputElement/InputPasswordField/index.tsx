@@ -11,8 +11,16 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui";
+import { cn } from "@/lib/utils";
 import type { inputControlType } from "..";
+import { fieldTextControlClassName } from "../fieldStyles";
 import type { inputPasswordFieldType } from "../types";
+
+const inputGroupTextClassName = cn(
+  fieldTextControlClassName,
+  "h-12 min-h-12 p-0 inset-shadow-none",
+  "has-[[data-slot=input-group-control]:focus-visible]:ring-[3px] has-[[data-slot=input-group-control]:focus-visible]:ring-primary-4/25",
+);
 
 export default function InputPasswordField({
   control,
@@ -44,7 +52,7 @@ export default function InputPasswordField({
             {label}
           </FieldLabel>
 
-          <InputGroup>
+          <InputGroup className={inputGroupTextClassName}>
             <InputGroupAddon
               align="inline-start"
               aria-invalid={fieldState.invalid}

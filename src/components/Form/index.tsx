@@ -6,6 +6,7 @@ import {
   forwardRef,
   type ReactNode,
   useImperativeHandle,
+  useMemo,
 } from "react";
 import {
   type FieldValues,
@@ -30,18 +31,38 @@ export type formType = DetailedHTMLProps<
 > & {
   inputData: inputDataType[];
   onSubmitForm: (data: Record<string, unknown>) => void | Promise<void>;
+  defaultValues?: Record<string, unknown>;
   error?: string | Record<string, string[]>;
   children?: ReactNode;
 };
 
 const Form = forwardRef<FormHandle, formType>(function Form(
-  { inputData, onSubmitForm, error: _error, children, className, ...props },
+  {
+    inputData,
+    onSubmitForm,
+    defaultValues: defaultValuesProp,
+    error: _error,
+    children,
+    className,
+    ...props
+  },
   ref,
 ) {
+  const resolvedDefaultValues = useMemo(() => {
+    const fromInputs: Record<string, unknown> = {};
+    for (const input of inputData) {
+      if ("defaultValue" in input && input.defaultValue !== undefined) {
+        fromInputs[input.name] = input.defaultValue;
+      }
+    }
+    return { ...fromInputs, ...defaultValuesProp };
+  }, [inputData, defaultValuesProp]);
+
   const { control, handleSubmit, setError, clearErrors } = useForm<
     Record<string, unknown>
   >({
     mode: "onSubmit",
+    defaultValues: resolvedDefaultValues,
   });
 
   useImperativeHandle(

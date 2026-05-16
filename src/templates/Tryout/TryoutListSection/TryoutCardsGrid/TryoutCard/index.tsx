@@ -72,7 +72,7 @@ export default function TryoutCard({ item }: TryoutCardProps) {
         onClick={() => router.push(`/tryout/${item.id}/edit`)}
       >
         <SquarePen className="size-4 shrink-0 opacity-90" aria-hidden />
-        Ubah Tryout
+        Ubah Paket Tryout
       </Button>
     </Card>
   );

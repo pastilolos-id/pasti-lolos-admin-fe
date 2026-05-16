@@ -1,6 +1,8 @@
 import type { Control, FieldValues } from "react-hook-form";
 import InputCheckBox from "./InputCheckbox";
 import InputPasswordField from "./InputPasswordField";
+import InputSelect from "./InputSelect";
+import InputTextarea from "./InputTextarea";
 import InputTextField from "./InputTextField";
 import type { inputDataType } from "./types";
 
@@ -25,6 +27,12 @@ export default function InputElement({ control, input }: InputElementType) {
 
     case "checkbox":
       return <InputCheckBox {...input} control={control} />;
+
+    case "select":
+      return <InputSelect {...input} control={control} />;
+
+    case "textarea":
+      return <InputTextarea {...input} control={control} />;
 
     default:
       return (

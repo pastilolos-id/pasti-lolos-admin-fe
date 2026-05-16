@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
 import type { TryoutInstitution } from "../../../types";
+
+const INSTITUTIONS: TryoutInstitution[] = ["BUMN", "CPNS"];
 
 type TryoutInstansiFilterProps = {
   value: TryoutInstitution;
@@ -43,23 +44,18 @@ export default function TryoutInstansiFilter({
         align="start"
         className="min-w-36 rounded-2xl border border-[#EEEEEE] p-1 shadow-md"
       >
-        <DropdownMenuRadioGroup
-          value={value}
-          onValueChange={(v) => onChange(v as TryoutInstitution)}
-        >
-          <DropdownMenuRadioItem
-            value="BUMN"
-            className="cursor-pointer rounded-xl px-3 py-2.5 text-sm font-semibold text-neutral-6 focus:bg-neutral-2"
+        {INSTITUTIONS.map((institution) => (
+          <DropdownMenuItem
+            key={institution}
+            className={cn(
+              "cursor-pointer rounded-xl px-3 py-2.5 text-sm font-semibold text-neutral-6 focus:bg-neutral-2",
+              value === institution && "bg-neutral-2",
+            )}
+            onClick={() => onChange(institution)}
           >
-            BUMN
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem
-            value="CPNS"
-            className="cursor-pointer rounded-xl px-3 py-2.5 text-sm font-semibold text-neutral-6 focus:bg-neutral-2"
-          >
-            CPNS
-          </DropdownMenuRadioItem>
-        </DropdownMenuRadioGroup>
+            {institution}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

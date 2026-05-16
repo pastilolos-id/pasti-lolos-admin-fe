@@ -1,20 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { useExamsListQuery } from "@/lib/exams/examsQuery";
 import { mapExamsListResponseToTryoutItems } from "@/lib/exams/mapExamToTryoutListItem";
+import { useTryoutStore } from "@/lib/store/tryout-store";
 
 import { tryoutPageStatsMock } from "./mockData";
 import TryoutHeaderSection from "./TryoutHeaderSection";
 import TryoutListSection from "./TryoutListSection";
 import TryoutStatsSection from "./TryoutStatsSection";
 import type { TryoutListFilters, TryoutListItem } from "./types";
-
-const defaultFilters: TryoutListFilters = {
-  search: "",
-  institution: "BUMN",
-};
 
 function filterTryouts(
   rows: TryoutListItem[],
@@ -50,10 +46,13 @@ function TryoutErrorSection() {
 }
 
 export default function TryoutPage() {
-  const [filters, setFilters] = useState<TryoutListFilters>(defaultFilters);
+  const search = useTryoutStore((s) => s.search);
+  const institution = useTryoutStore((s) => s.institution);
+  const setSearch = useTryoutStore((s) => s.setSearch);
+  const setInstitution = useTryoutStore((s) => s.setInstitution);
 
   const { data, isLoading, isError, isFetching } = useExamsListQuery({
-    category: filters.institution,
+    category: institution,
   });
 
   const apiItems = useMemo(
@@ -62,8 +61,8 @@ export default function TryoutPage() {
   );
 
   const filtered = useMemo(
-    () => filterTryouts(apiItems, filters),
-    [apiItems, filters],
+    () => filterTryouts(apiItems, { search, institution }),
+    [apiItems, search, institution],
   );
 
   const isInitialLoading = isLoading || (isFetching && !data);
@@ -75,20 +74,10 @@ export default function TryoutPage() {
       <TryoutStatsSection stats={tryoutPageStatsMock} />
 
       <TryoutListSection
-        search={filters.search}
-        onSearchChange={(search) =>
-          setFilters((prev) => ({
-            ...prev,
-            search,
-          }))
-        }
-        institution={filters.institution}
-        onInstitutionChange={(institution) =>
-          setFilters((prev) => ({
-            ...prev,
-            institution,
-          }))
-        }
+        search={search}
+        onSearchChange={setSearch}
+        institution={institution}
+        onInstitutionChange={setInstitution}
         items={filtered}
         isLoading={isInitialLoading}
         isError={isError}

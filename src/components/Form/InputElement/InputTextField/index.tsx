@@ -4,12 +4,21 @@ import {
   Field,
   FieldError,
   FieldLabel,
+  Input,
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui";
+import { cn } from "@/lib/utils";
 import type { inputControlType } from "..";
+import { fieldTextControlClassName } from "../fieldStyles";
 import type { inputTextFieldType } from "../types";
+
+const inputGroupTextClassName = cn(
+  fieldTextControlClassName,
+  "h-12 min-h-12 p-0 inset-shadow-none",
+  "has-[[data-slot=input-group-control]:focus-visible]:ring-[3px] has-[[data-slot=input-group-control]:focus-visible]:ring-primary-4/25",
+);
 
 export default function InputTextField({
   control,
@@ -17,6 +26,8 @@ export default function InputTextField({
   error,
   ...input
 }: inputTextFieldType & inputControlType) {
+  const hasIcons = Boolean(input.leftIcon || input.rightIcon);
+
   return (
     <Controller
       name={input.name}
@@ -44,35 +55,52 @@ export default function InputTextField({
             {label}
           </FieldLabel>
 
-          <InputGroup>
-            {input.leftIcon && (
-              <InputGroupAddon
-                aria-invalid={fieldState.invalid}
-                align="inline-start"
-                className="inset-shadow-primary-button"
-              >
-                <Icon viewBox="0 0 24 24" name={input.leftIcon} size={24} />
-              </InputGroupAddon>
-            )}
+          {hasIcons ? (
+            <InputGroup className={inputGroupTextClassName}>
+              {input.leftIcon && (
+                <InputGroupAddon
+                  aria-invalid={fieldState.invalid}
+                  align="inline-start"
+                  className="inset-shadow-primary-button"
+                >
+                  <Icon viewBox="0 0 24 24" name={input.leftIcon} size={24} />
+                </InputGroupAddon>
+              )}
 
-            <InputGroupInput
+              <InputGroupInput
+                {...field}
+                id={input.name}
+                type={input.type}
+                aria-invalid={fieldState.invalid}
+                placeholder={input.placeholder}
+                name={input.name}
+                disabled={input.disabled}
+              />
+
+              {input.rightIcon && (
+                <InputGroupAddon
+                  align="inline-end"
+                  className="inset-shadow-primary-button"
+                >
+                  <Icon viewBox="0 0 24 24" name={input.rightIcon} size={24} />
+                </InputGroupAddon>
+              )}
+            </InputGroup>
+          ) : (
+            <Input
               {...field}
               id={input.name}
               type={input.type}
               aria-invalid={fieldState.invalid}
               placeholder={input.placeholder}
               name={input.name}
+              disabled={input.disabled}
+              className={cn(
+                fieldTextControlClassName,
+                fieldState.invalid && "border-red",
+              )}
             />
-
-            {input.rightIcon && (
-              <InputGroupAddon
-                align="inline-end"
-                className="inset-shadow-primary-button"
-              >
-                <Icon viewBox="0 0 24 24" name={input.rightIcon} size={24} />
-              </InputGroupAddon>
-            )}
-          </InputGroup>
+          )}
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
         </Field>
       )}

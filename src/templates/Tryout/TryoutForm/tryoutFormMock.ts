@@ -1,22 +1,24 @@
 import type { TryoutListItem } from "../types";
-import type { TryoutFormExamType, TryoutFormValues } from "./tryoutFormTypes";
+import type { TryoutFormValues } from "./tryoutFormTypes";
 
-/** Nilai awal mode create — selaras placeholder desain. */
 export const emptyTryoutFormValues: TryoutFormValues = {
   examName: "",
-  category: "",
-  durationDisplay: "",
-  startTime: "",
-  endTime: "",
-  totalQuestions: "",
-  passingGrade: "",
-  attempts: "",
-  examType: "",
-  priceAmount: "",
-  deadline: "",
   description: "",
-  notes: "",
+  subjectId: "",
+  durationMinutes: "",
+  status: "published",
+  passingScore: "",
+  price: "",
+  attemptsAllowed: "1",
+  randomizeQuestions: true,
 };
+
+export function emptyTryoutFormValuesForChild(): TryoutFormValues {
+  return {
+    ...emptyTryoutFormValues,
+    price: "0",
+  };
+}
 
 /** Mock daftar untuk form view/edit hingga GET detail tersedia. */
 const tryoutFormListMock: TryoutListItem[] = [
@@ -40,10 +42,12 @@ const tryoutFormListMock: TryoutListItem[] = [
   },
 ];
 
-/**
- * Mock detail form per id daftar tryout.
- * TODO: ganti dengan `GET /exams/get/:id` saat BE siap.
- */
+function institutionToSubjectId(
+  institution: TryoutListItem["institution"],
+): string {
+  return institution === "BUMN" ? "1" : "2";
+}
+
 function buildMockValuesForId(id: string): TryoutFormValues | undefined {
   const item = tryoutFormListMock.find((row) => row.id === id);
   if (!item) {
@@ -51,23 +55,18 @@ function buildMockValuesForId(id: string): TryoutFormValues | undefined {
   }
 
   const n = Number.parseInt(id.replace(/\D/g, ""), 10) || 1;
-  const examType: TryoutFormExamType = n % 2 === 0 ? "simulation" : "real";
 
   return {
     examName: item.title,
-    category: item.institution,
-    durationDisplay: `${item.durationMinutes} Menit`,
-    startTime: "06:28:55",
-    endTime: "18:30:00",
-    totalQuestions: String(item.questionCount),
-    passingGrade: String(75 + (n % 15)),
-    attempts: String(1 + (n % 5)),
-    examType,
-    priceAmount: String(item.price),
-    deadline: "2026-12-31",
     description:
       "Ujian ini tentang persiapan seleksi kompetensi. Data mock untuk slicing admin.",
-    notes: "Catatan internal admin (mock).",
+    subjectId: institutionToSubjectId(item.institution),
+    durationMinutes: String(item.durationMinutes),
+    status: "published",
+    passingScore: String(75 + (n % 15)),
+    price: String(item.price),
+    attemptsAllowed: String(1 + (n % 5)),
+    randomizeQuestions: true,
   };
 }
 

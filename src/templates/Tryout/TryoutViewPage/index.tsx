@@ -150,7 +150,7 @@ export default function TryoutViewPage() {
             className="h-10 shrink-0 rounded-full px-4 text-sm font-bold whitespace-nowrap text-white shadow-none"
             asChild
           >
-            <Link href={`/tryout/create?packageId=${parentId}`}>
+            <Link href={`/tryout/${parentId}/add-tryout`}>
               <Plus className="size-4 shrink-0" aria-hidden />
               Tambah Tryout
             </Link>

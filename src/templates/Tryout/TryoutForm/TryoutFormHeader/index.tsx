@@ -9,14 +9,27 @@ import TryoutFormBackLink from "./TryoutFormBackLink";
 
 type TryoutFormHeaderProps = {
   mode: TryoutFormMode;
+  backHref: string;
   onDeleteClick?: () => void;
 };
 
+function getTitle(mode: TryoutFormMode): string {
+  switch (mode) {
+    case "create-parent":
+      return "Buat Paket Tryout Baru";
+    case "create-child":
+      return "Tambah Tryout";
+    default:
+      return "Detail Tryout";
+  }
+}
+
 export default function TryoutFormHeader({
   mode,
+  backHref,
   onDeleteClick,
 }: TryoutFormHeaderProps) {
-  const title = mode === "create" ? "Buat Tryout Baru" : "Detail Tryout";
+  const title = getTitle(mode);
   const showDelete = mode === "edit";
 
   return (
@@ -27,7 +40,7 @@ export default function TryoutFormHeader({
           showDelete ? "justify-between" : "justify-start",
         )}
       >
-        <TryoutFormBackLink />
+        <TryoutFormBackLink href={backHref} />
         {showDelete ? (
           <Button
             type="button"

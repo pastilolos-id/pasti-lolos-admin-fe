@@ -13,16 +13,24 @@ export type TryoutFormActionDialogKind =
   | "delete"
   | null;
 
+export type CreateSuccessVariant = "parent" | "child";
+
 type TryoutFormActionDialogsProps = {
   active: TryoutFormActionDialogKind;
+  createSuccessVariant?: CreateSuccessVariant;
   onActiveChange: (next: TryoutFormActionDialogKind) => void;
+  onCreateSuccessClose: () => void;
+  onCreateSuccessAddNew: () => void;
   onEditSaveConfirm: () => void;
   onDeleteConfirm: () => void;
 };
 
 function buildLayout(
   active: TryoutFormActionDialogKind,
+  createSuccessVariant: CreateSuccessVariant,
   onActiveChange: (next: TryoutFormActionDialogKind) => void,
+  onCreateSuccessClose: () => void,
+  onCreateSuccessAddNew: () => void,
   onEditSaveConfirm: () => void,
   onDeleteConfirm: () => void,
 ): {
@@ -34,15 +42,29 @@ function buildLayout(
   const close = () => onActiveChange(null);
 
   if (active === "create-success") {
+    const isParent = createSuccessVariant === "parent";
     return {
       tone: "success",
       iconName: "tryout",
-      message: "Tryout sudah berhasil dibuat",
+      message: isParent
+        ? "Paket tryout sudah berhasil dibuat"
+        : "Tryout sudah berhasil ditambahkan",
       actions: [
         {
           label: "OK",
           appearance: "solid",
-          onClick: close,
+          onClick: () => {
+            close();
+            onCreateSuccessClose();
+          },
+        },
+        {
+          label: isParent ? "Tambah Paket Tryout" : "Tambah Tryout",
+          appearance: "outline",
+          onClick: () => {
+            close();
+            onCreateSuccessAddNew();
+          },
         },
       ],
     };
@@ -99,14 +121,33 @@ function buildLayout(
 
 export default function TryoutFormActionDialogs({
   active,
+  createSuccessVariant = "parent",
   onActiveChange,
+  onCreateSuccessClose,
+  onCreateSuccessAddNew,
   onEditSaveConfirm,
   onDeleteConfirm,
 }: TryoutFormActionDialogsProps) {
   const layout = useMemo(
     () =>
-      buildLayout(active, onActiveChange, onEditSaveConfirm, onDeleteConfirm),
-    [active, onActiveChange, onEditSaveConfirm, onDeleteConfirm],
+      buildLayout(
+        active,
+        createSuccessVariant,
+        onActiveChange,
+        onCreateSuccessClose,
+        onCreateSuccessAddNew,
+        onEditSaveConfirm,
+        onDeleteConfirm,
+      ),
+    [
+      active,
+      createSuccessVariant,
+      onActiveChange,
+      onCreateSuccessClose,
+      onCreateSuccessAddNew,
+      onEditSaveConfirm,
+      onDeleteConfirm,
+    ],
   );
 
   if (!layout) {
