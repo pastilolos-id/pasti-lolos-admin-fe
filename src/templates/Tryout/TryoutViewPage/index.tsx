@@ -9,13 +9,8 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { useExamPackageDetailQuery } from "@/lib/exams/examsQuery";
 import { mapSubExamsForView } from "@/lib/exams/mapExamPackageDetail";
 import { parseExamApiError } from "@/lib/exams/parseExamApiError";
+import { parseNumericTryoutId } from "@/lib/exams/parseExamId";
 import { cn, formatIdr } from "@/lib/utils";
-
-function parseNumericTryoutId(rawId: string): number | null {
-  const trimmed = decodeURIComponent(rawId).trim();
-  if (!/^\d+$/.test(trimmed)) return null;
-  return Number(trimmed);
-}
 
 export default function TryoutViewPage() {
   const params = useParams<{ id: string }>();

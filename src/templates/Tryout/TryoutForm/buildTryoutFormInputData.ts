@@ -4,7 +4,11 @@ import {
   emptyTryoutFormValues,
   emptyTryoutFormValuesForChild,
 } from "./tryoutFormMock";
-import type { TryoutFormMode, TryoutFormValues } from "./tryoutFormTypes";
+import type {
+  TryoutFormMode,
+  TryoutFormValues,
+  TryoutParentFormValues,
+} from "./tryoutFormTypes";
 
 const fieldClassName = "w-full";
 
@@ -40,7 +44,7 @@ type BuildTryoutFormInputDataParams = {
   readOnly?: boolean;
   defaultSubjectId?: string;
   lockedParentSubjectId?: string;
-  initialValues?: TryoutFormValues;
+  initialValues?: TryoutFormValues | TryoutParentFormValues;
 };
 
 export function buildTryoutFormInputData({
@@ -54,11 +58,13 @@ export function buildTryoutFormInputData({
   const v = initialValues;
   const isChildSubjectLocked =
     mode === "create-child" && Boolean(lockedParentSubjectId);
+  const isEditParent = mode === "edit-parent";
   const lockedSubjectOption = lockedParentSubjectId
     ? getSubjectOption(lockedParentSubjectId)
     : undefined;
+  const fullValues = v && "status" in v ? v : undefined;
 
-  return [
+  const coreFields: inputDataType[] = [
     {
       name: "examName",
       type: "text",
@@ -83,8 +89,8 @@ export function buildTryoutFormInputData({
       type: "select",
       label: "Mata Pelajaran / Kategori",
       className: fieldClassName,
-      required: !readOnly && !isChildSubjectLocked,
-      disabled: disabled || isChildSubjectLocked,
+      required: !readOnly && !isChildSubjectLocked && !isEditParent,
+      disabled: disabled || isChildSubjectLocked || isEditParent,
       placeholder: "Pilih",
       defaultValue: isChildSubjectLocked
         ? lockedParentSubjectId
@@ -104,6 +110,24 @@ export function buildTryoutFormInputData({
       placeholder: "Contoh: 100",
       defaultValue: v?.durationMinutes ?? "",
     },
+  ];
+
+  const priceField: inputDataType = {
+    name: "price",
+    type: "number",
+    label: "Harga",
+    className: fieldClassName,
+    disabled,
+    placeholder: mode === "create-child" ? "0" : "Contoh: 149000",
+    defaultValue: v?.price ?? (mode === "create-child" ? "0" : ""),
+  };
+
+  if (isEditParent) {
+    return [...coreFields, priceField];
+  }
+
+  return [
+    ...coreFields,
     {
       name: "status",
       type: "select",
@@ -112,7 +136,7 @@ export function buildTryoutFormInputData({
       required: !readOnly && mode !== "create-parent",
       disabled: disabled || mode === "create-parent",
       defaultValue:
-        mode === "create-parent" ? "draft" : v?.status || "published",
+        mode === "create-parent" ? "draft" : fullValues?.status || "published",
       options:
         mode === "create-parent"
           ? [{ value: "draft", label: "Draft" }]
@@ -125,17 +149,9 @@ export function buildTryoutFormInputData({
       className: fieldClassName,
       disabled,
       placeholder: "Contoh: 70",
-      defaultValue: v?.passingScore ?? "",
+      defaultValue: fullValues?.passingScore ?? "",
     },
-    {
-      name: "price",
-      type: "number",
-      label: "Harga",
-      className: fieldClassName,
-      disabled,
-      placeholder: mode === "create-child" ? "0" : "Contoh: 149000",
-      defaultValue: v?.price ?? (mode === "create-child" ? "0" : ""),
-    },
+    priceField,
     {
       name: "attemptsAllowed",
       type: "number",
@@ -143,7 +159,7 @@ export function buildTryoutFormInputData({
       className: fieldClassName,
       disabled,
       placeholder: "Contoh: 1",
-      defaultValue: v?.attemptsAllowed ?? "1",
+      defaultValue: fullValues?.attemptsAllowed ?? "1",
     },
     {
       name: "randomizeQuestions",

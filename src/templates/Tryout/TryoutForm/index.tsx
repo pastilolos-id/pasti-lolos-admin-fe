@@ -4,8 +4,12 @@ import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useRef, useState } from "react";
 
 import Form from "@/components/Form";
-import { useExamPackageDetailQuery } from "@/lib/exams/examsQuery";
+import {
+  useExamPackageDetailQuery,
+  useUpdateExamMutation,
+} from "@/lib/exams/examsQuery";
 import { mapTryoutFormToCreatePayload } from "@/lib/exams/mapTryoutFormToCreatePayload";
+import { mapTryoutFormToUpdateParentPayload } from "@/lib/exams/mapTryoutFormToUpdateParentPayload";
 import { parseExamApiError } from "@/lib/exams/parseExamApiError";
 import { useTryoutStore } from "@/lib/store/tryout-store";
 import {
@@ -19,7 +23,11 @@ import TryoutFormActionDialogs, {
 import TryoutFormFooter from "./TryoutFormFooter";
 import TryoutFormHeader from "./TryoutFormHeader";
 import TryoutFormBackLink from "./TryoutFormHeader/TryoutFormBackLink";
-import type { TryoutFormProps, TryoutFormValues } from "./tryoutFormTypes";
+import type {
+  TryoutFormProps,
+  TryoutFormValues,
+  TryoutParentFormValues,
+} from "./tryoutFormTypes";
 
 function parseFormValues(data: Record<string, unknown>): TryoutFormValues {
   return {
@@ -32,6 +40,18 @@ function parseFormValues(data: Record<string, unknown>): TryoutFormValues {
     price: String(data.price ?? ""),
     attemptsAllowed: String(data.attemptsAllowed ?? ""),
     randomizeQuestions: data.randomizeQuestions === true,
+  };
+}
+
+function parseParentFormValues(
+  data: Record<string, unknown>,
+): TryoutParentFormValues {
+  return {
+    examName: String(data.examName ?? ""),
+    description: String(data.description ?? ""),
+    subjectId: String(data.subjectId ?? ""),
+    durationMinutes: String(data.durationMinutes ?? ""),
+    price: String(data.price ?? ""),
   };
 }
 
@@ -52,12 +72,19 @@ export default function TryoutForm(props: TryoutFormProps) {
   const [formKey, setFormKey] = useState(0);
   const [dialogActive, setDialogActive] =
     useState<TryoutFormActionDialogKind>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const editSubmitConfirmedRef = useRef(false);
   const tryoutFormId = "tryout-form";
+
+  const { mutateAsync: updateExam, isPending: isUpdating } =
+    useUpdateExamMutation();
 
   const backHref = useMemo(() => {
     if (mode === "create-child") {
       return `/tryout/${props.packageId}/view`;
+    }
+    if (mode === "edit-parent") {
+      return `/tryout/${props.examId}/view`;
     }
     return "/tryout";
   }, [mode, props]);
@@ -84,7 +111,7 @@ export default function TryoutForm(props: TryoutFormProps) {
   }, [mode, parentPackage?.subject]);
 
   const defaultFormValues = useMemo(() => {
-    if (mode === "edit" || mode === "view") {
+    if (mode === "edit-parent" || mode === "view") {
       return props.initialData;
     }
     return getDefaultFormValues(mode, {
@@ -99,12 +126,16 @@ export default function TryoutForm(props: TryoutFormProps) {
         mode,
         readOnly,
         defaultSubjectId:
-          mode === "create-parent" ? defaultFormValues.subjectId : undefined,
+          mode === "create-parent" && "subjectId" in defaultFormValues
+            ? defaultFormValues.subjectId
+            : undefined,
         lockedParentSubjectId,
         initialValues:
-          mode === "edit" || mode === "view" ? props.initialData : undefined,
+          mode === "edit-parent" || mode === "view"
+            ? props.initialData
+            : undefined,
       }),
-    [mode, readOnly, defaultFormValues.subjectId, lockedParentSubjectId, props],
+    [mode, readOnly, defaultFormValues, lockedParentSubjectId, props],
   );
 
   const handleCreateSubmit = useCallback(
@@ -130,10 +161,26 @@ export default function TryoutForm(props: TryoutFormProps) {
     [mode, props, lockedParentSubjectId],
   );
 
-  const handleEditSubmit = useCallback((data: Record<string, unknown>) => {
-    const values = parseFormValues(data);
-    console.log("TryoutForm submit (edit mock)", values);
-  }, []);
+  const handleEditParentSubmit = useCallback(
+    async (data: Record<string, unknown>) => {
+      if (mode !== "edit-parent") return;
+
+      setSubmitError(null);
+      const values = parseParentFormValues(data);
+      const payload = mapTryoutFormToUpdateParentPayload(values);
+
+      try {
+        await updateExam({
+          id: Number(props.examId),
+          body: payload,
+        });
+        router.push(`/tryout/${props.examId}/view`);
+      } catch (err) {
+        setSubmitError(parseExamApiError(err, "update"));
+      }
+    },
+    [mode, props, updateExam, router],
+  );
 
   const onSubmitForm = useCallback(
     (data: Record<string, unknown>) => {
@@ -141,16 +188,16 @@ export default function TryoutForm(props: TryoutFormProps) {
         handleCreateSubmit(data);
         return;
       }
-      if (mode === "edit") {
+      if (mode === "edit-parent") {
         if (!editSubmitConfirmedRef.current) {
           setDialogActive("edit-save");
           return;
         }
         editSubmitConfirmedRef.current = false;
-        handleEditSubmit(data);
+        void handleEditParentSubmit(data);
       }
     },
-    [isCreate, mode, handleCreateSubmit, handleEditSubmit],
+    [isCreate, mode, handleCreateSubmit, handleEditParentSubmit],
   );
 
   const handleCreateSuccessClose = useCallback(() => {
@@ -178,7 +225,7 @@ export default function TryoutForm(props: TryoutFormProps) {
   }, [submitTryoutForm]);
 
   const handleDeleteClick = useCallback(() => {
-    if (mode === "edit") {
+    if (mode === "edit-parent") {
       setDialogActive("delete");
     }
   }, [mode]);
@@ -232,7 +279,7 @@ export default function TryoutForm(props: TryoutFormProps) {
         <TryoutFormHeader
           mode={mode}
           backHref={backHref}
-          onDeleteClick={mode === "edit" ? handleDeleteClick : undefined}
+          onDeleteClick={mode === "edit-parent" ? handleDeleteClick : undefined}
         />
 
         <Form
@@ -243,9 +290,13 @@ export default function TryoutForm(props: TryoutFormProps) {
           defaultValues={formDefaultValues}
           onSubmitForm={onSubmitForm}
         >
+          {submitError ? (
+            <p className="text-b2 text-red">{submitError}</p>
+          ) : null}
           <TryoutFormFooter
             mode={mode}
-            onSaveClick={mode === "edit" ? requestEditSave : undefined}
+            isSubmitting={isUpdating}
+            onSaveClick={mode === "edit-parent" ? requestEditSave : undefined}
           />
         </Form>
       </section>

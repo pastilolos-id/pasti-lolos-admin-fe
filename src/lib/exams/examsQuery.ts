@@ -1,7 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { getExamPackageDetail, getExams } from "./examsApi";
+import { getExamPackageDetail, getExams, updateExam } from "./examsApi";
 import type { ExamsListParams } from "./types";
+import type { UpdateExamParentRequest } from "./updateExamTypes";
 
 export const examsQueryKeys = {
   list: (params: ExamsListParams) => ["exams", "list", params] as const,
@@ -20,5 +21,22 @@ export function useExamPackageDetailQuery(examId: number | null) {
     queryKey: examsQueryKeys.detail(examId ?? 0),
     enabled: examId != null && examId > 0,
     queryFn: () => getExamPackageDetail(examId as number),
+  });
+}
+
+export function useUpdateExamMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, body }: { id: number; body: UpdateExamParentRequest }) =>
+      updateExam(id, body),
+    onSuccess: (_data, variables) => {
+      void queryClient.invalidateQueries({
+        queryKey: examsQueryKeys.detail(variables.id),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ["exams", "list"],
+      });
+    },
   });
 }

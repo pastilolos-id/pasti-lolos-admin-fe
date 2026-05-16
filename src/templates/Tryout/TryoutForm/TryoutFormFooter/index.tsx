@@ -23,7 +23,7 @@ export default function TryoutFormFooter({
     return null;
   }
 
-  if (mode === "edit" && onSaveClick) {
+  if (mode === "edit-parent" && onSaveClick) {
     return (
       <Button
         type="button"

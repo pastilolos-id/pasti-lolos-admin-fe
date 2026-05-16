@@ -5,6 +5,10 @@ import type {
   ExamsListParams,
   ExamsListResponse,
 } from "./types";
+import type {
+  UpdateExamParentRequest,
+  UpdateExamResponse,
+} from "./updateExamTypes";
 
 function buildQueryString(params: ExamsListParams): string {
   const searchParams = new URLSearchParams();
@@ -23,5 +27,12 @@ export function getExams(params: ExamsListParams) {
 export function getExamPackageDetail(id: number) {
   return apiFetch<ExamPackageDetailResponse>(`/exams/package-detail/${id}`, {
     method: "GET",
+  });
+}
+
+export function updateExam(id: number, body: UpdateExamParentRequest) {
+  return apiFetch<UpdateExamResponse>(`/exams/update/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(body),
   });
 }

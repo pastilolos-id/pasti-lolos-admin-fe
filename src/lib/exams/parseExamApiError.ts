@@ -13,7 +13,10 @@ function messageFromBody(data: unknown): string | null {
   return null;
 }
 
-export function parseExamApiError(error: unknown): string {
+export function parseExamApiError(
+  error: unknown,
+  context: "load" | "update" = "load",
+): string {
   if (error instanceof ApiError) {
     if (error.status === 404) {
       return "Paket tryout tidak ditemukan.";
@@ -24,6 +27,10 @@ export function parseExamApiError(error: unknown): string {
 
   if (error instanceof Error && error.message) {
     return error.message;
+  }
+
+  if (context === "update") {
+    return "Gagal menyimpan perubahan tryout. Silakan coba lagi.";
   }
 
   return "Gagal memuat detail tryout. Silakan coba lagi.";

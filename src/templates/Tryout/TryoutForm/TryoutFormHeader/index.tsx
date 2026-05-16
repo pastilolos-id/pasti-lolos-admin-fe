@@ -19,6 +19,8 @@ function getTitle(mode: TryoutFormMode): string {
       return "Buat Paket Tryout Baru";
     case "create-child":
       return "Tambah Tryout";
+    case "edit-parent":
+      return "Edit Paket Tryout";
     default:
       return "Detail Tryout";
   }
@@ -30,7 +32,7 @@ export default function TryoutFormHeader({
   onDeleteClick,
 }: TryoutFormHeaderProps) {
   const title = getTitle(mode);
-  const showDelete = mode === "edit";
+  const showDelete = mode === "edit-parent";
 
   return (
     <div className="space-y-4">
