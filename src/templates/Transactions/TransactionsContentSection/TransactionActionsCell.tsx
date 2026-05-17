@@ -19,9 +19,9 @@ import {
   useVerifyPaymentMutation,
 } from "@/lib/transactions/transactionsQuery";
 import { cn } from "@/lib/utils";
-import TryoutFormActionDialogLayout, {
-  type TryoutFormActionDialogAction,
-} from "@/templates/Tryout/TryoutForm/TryoutFormActionDialogs/TryoutFormActionDialogLayout";
+import ActionDialogLayout, {
+  type ActionDialogAction,
+} from "@/components/ActionDialogLayout";
 import type { TransactionDisplayStatus } from "../types";
 
 type ConfirmKind = "reject" | "approve" | null;
@@ -131,7 +131,7 @@ export function TransactionActionsCell({
     }
   };
 
-  const feedbackActions: TryoutFormActionDialogAction[] = [
+  const feedbackActions: ActionDialogAction[] = [
     {
       label: "OK",
       appearance: "solid",
@@ -343,7 +343,7 @@ export function TransactionActionsCell({
           </div>
         ) : null}
 
-        <TryoutFormActionDialogLayout
+        <ActionDialogLayout
           open={feedback !== null}
           onOpenChange={(open) => {
             if (!open) {

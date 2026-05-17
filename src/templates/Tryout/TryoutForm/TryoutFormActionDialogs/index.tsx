@@ -2,10 +2,10 @@
 
 import { useMemo } from "react";
 import type { IconProps } from "@/components/Icon";
-import TryoutFormActionDialogLayout, {
-  type TryoutFormActionDialogAction,
-  type TryoutFormActionDialogTone,
-} from "./TryoutFormActionDialogLayout";
+import ActionDialogLayout, {
+  type ActionDialogAction,
+  type ActionDialogTone,
+} from "@/components/ActionDialogLayout";
 
 export type TryoutFormActionDialogKind =
   | "create-success"
@@ -34,10 +34,10 @@ function buildLayout(
   onEditSaveConfirm: () => void,
   onDeleteConfirm: () => void,
 ): {
-  tone: TryoutFormActionDialogTone;
+  tone: ActionDialogTone;
   iconName: IconProps["name"];
   message: string;
-  actions: TryoutFormActionDialogAction[];
+  actions: ActionDialogAction[];
 } | null {
   const close = () => onActiveChange(null);
 
@@ -155,7 +155,7 @@ export default function TryoutFormActionDialogs({
   }
 
   return (
-    <TryoutFormActionDialogLayout
+    <ActionDialogLayout
       open={active !== null}
       onOpenChange={(open) => {
         if (!open) {

@@ -1,3 +1,5 @@
+export type { ActionDialogAction, ActionDialogTone } from "./ActionDialogLayout";
+export { default as ActionDialogLayout } from "./ActionDialogLayout";
 export type { FormHandle } from "./Form";
 export { default as Form } from "./Form";
 export { default as Icon } from "./Icon";

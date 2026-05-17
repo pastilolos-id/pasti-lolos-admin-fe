@@ -11,38 +11,38 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
-export type TryoutFormActionDialogTone = "primary" | "destructive" | "success";
+export type ActionDialogTone = "primary" | "destructive" | "success";
 
-export type TryoutFormActionDialogAction = {
+export type ActionDialogAction = {
   label: string;
   onClick: () => void;
   /** Solid putih (utama) atau outline putih (batal). */
   appearance: "solid" | "outline";
 };
 
-type TryoutFormActionDialogLayoutProps = {
+type ActionDialogLayoutProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  tone: TryoutFormActionDialogTone;
+  tone: ActionDialogTone;
   iconName: IconProps["name"];
   message: string;
-  actions: TryoutFormActionDialogAction[];
+  actions: ActionDialogAction[];
 };
 
-const toneClass: Record<TryoutFormActionDialogTone, string> = {
+const toneClass: Record<ActionDialogTone, string> = {
   primary: "bg-primary-4",
   destructive: "bg-red",
   success: "bg-green",
 };
 
-export default function TryoutFormActionDialogLayout({
+export default function ActionDialogLayout({
   open,
   onOpenChange,
   tone,
   iconName,
   message,
   actions,
-}: TryoutFormActionDialogLayoutProps) {
+}: ActionDialogLayoutProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent

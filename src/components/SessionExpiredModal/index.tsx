@@ -2,13 +2,13 @@
 
 import { SESSION_EXPIRED_MESSAGE } from "@/lib/auth/session-lifecycle";
 import { useSessionStore } from "@/lib/store/session-store";
-import TryoutFormActionDialogLayout from "@/templates/Tryout/TryoutForm/TryoutFormActionDialogs/TryoutFormActionDialogLayout";
+import ActionDialogLayout from "@/components/ActionDialogLayout";
 
 export default function SessionExpiredModal() {
   const isOpen = useSessionStore((state) => state.isSessionExpiredModalOpen);
 
   return (
-    <TryoutFormActionDialogLayout
+    <ActionDialogLayout
       open={isOpen}
       onOpenChange={() => {
         // Session expiry flow is not dismissible manually.

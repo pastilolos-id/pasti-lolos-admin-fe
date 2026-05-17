@@ -15,9 +15,9 @@ import { parseLoginError } from "@/lib/auth/parseLoginError";
 import { ADMIN_ROLE_ID } from "@/lib/auth/types";
 import { removeToken } from "@/lib/cookies/tokenCookies";
 import { useAuthStore } from "@/lib/store/auth-store";
-import TryoutFormActionDialogLayout, {
-  type TryoutFormActionDialogAction,
-} from "@/templates/Tryout/TryoutForm/TryoutFormActionDialogs/TryoutFormActionDialogLayout";
+import ActionDialogLayout, {
+  type ActionDialogAction,
+} from "@/components/ActionDialogLayout";
 import AuthLeftSection from "../LeftSection";
 import { loginInputData } from "./inputData";
 
@@ -110,7 +110,7 @@ export default function LoginPage() {
 
   const userAppUrl = process.env.NEXT_PUBLIC_USER_APP_URL?.trim() ?? "";
 
-  const dialogActions: TryoutFormActionDialogAction[] =
+  const dialogActions: ActionDialogAction[] =
     dialogKind === "not-admin"
       ? [
           {
@@ -155,7 +155,7 @@ export default function LoginPage() {
         </Form>
       </AuthLeftSection>
 
-      <TryoutFormActionDialogLayout
+      <ActionDialogLayout
         open={dialogKind !== null}
         onOpenChange={(open) => {
           if (!open) {
