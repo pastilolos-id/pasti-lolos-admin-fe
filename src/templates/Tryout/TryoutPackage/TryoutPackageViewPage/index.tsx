@@ -12,7 +12,7 @@ import { parseExamApiError } from "@/lib/exams/parseExamApiError";
 import { parseNumericTryoutId } from "@/lib/exams/parseExamId";
 import { cn, formatIdr } from "@/lib/utils";
 
-export default function TryoutViewPage() {
+export default function TryoutPackageViewPage() {
   const params = useParams<{ packageId: string }>();
   const rawId = params?.packageId ?? "";
   const numericId = parseNumericTryoutId(rawId);

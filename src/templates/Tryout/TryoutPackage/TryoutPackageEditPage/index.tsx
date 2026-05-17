@@ -9,7 +9,7 @@ import { parseNumericTryoutId } from "@/lib/exams/parseExamId";
 import TryoutForm from "@/templates/Tryout/TryoutForm";
 import TryoutFormBackLink from "@/templates/Tryout/TryoutForm/TryoutFormHeader/TryoutFormBackLink";
 
-export default function TryoutEditPage() {
+export default function TryoutPackageEditPage() {
   const params = useParams<{ packageId: string }>();
   const rawId = params?.packageId ?? "";
   const numericId = parseNumericTryoutId(rawId);

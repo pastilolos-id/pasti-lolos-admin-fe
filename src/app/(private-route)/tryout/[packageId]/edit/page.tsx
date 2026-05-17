@@ -1,5 +1,5 @@
-import TryoutEditPage from "@/templates/Tryout/TryoutEditPage";
+import TryoutPackageEditPage from "@/templates/Tryout/TryoutPackage/TryoutPackageEditPage";
 
 export default function TryoutEditRoute() {
-  return <TryoutEditPage />;
+  return <TryoutPackageEditPage />;
 }

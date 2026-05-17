@@ -1,5 +1,5 @@
-import TryoutViewPage from "@/templates/Tryout/TryoutViewPage";
+import TryoutPackageViewPage from "@/templates/Tryout/TryoutPackage/TryoutPackageViewPage";
 
 export default function TryoutViewRoute() {
-  return <TryoutViewPage />;
+  return <TryoutPackageViewPage />;
 }
