@@ -10,8 +10,8 @@ import TryoutForm from "@/templates/Tryout/TryoutForm";
 import TryoutFormBackLink from "@/templates/Tryout/TryoutForm/TryoutFormHeader/TryoutFormBackLink";
 
 export default function TryoutEditPage() {
-  const params = useParams<{ id: string }>();
-  const rawId = params?.id ?? "";
+  const params = useParams<{ packageId: string }>();
+  const rawId = params?.packageId ?? "";
   const numericId = parseNumericTryoutId(rawId);
 
   const {

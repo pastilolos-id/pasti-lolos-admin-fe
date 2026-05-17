@@ -13,8 +13,8 @@ import { parseNumericTryoutId } from "@/lib/exams/parseExamId";
 import { cn, formatIdr } from "@/lib/utils";
 
 export default function TryoutViewPage() {
-  const params = useParams<{ id: string }>();
-  const rawId = params?.id ?? "";
+  const params = useParams<{ packageId: string }>();
+  const rawId = params?.packageId ?? "";
   const numericId = parseNumericTryoutId(rawId);
 
   const {

@@ -3,11 +3,11 @@ import { notFound } from "next/navigation";
 import TryoutForm from "@/templates/Tryout/TryoutForm";
 
 type TryoutAddChildRouteProps = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ packageId: string }>;
 };
 
-function parseNumericPackageId(rawId: string): string | null {
-  const trimmed = decodeURIComponent(rawId).trim();
+function parseNumericPackageId(rawPackageId: string): string | null {
+  const trimmed = decodeURIComponent(rawPackageId).trim();
   if (!/^\d+$/.test(trimmed)) return null;
   return trimmed;
 }
@@ -15,8 +15,8 @@ function parseNumericPackageId(rawId: string): string | null {
 export default async function TryoutAddChildRoute({
   params,
 }: TryoutAddChildRouteProps) {
-  const { id } = await params;
-  const packageId = parseNumericPackageId(id);
+  const { packageId: rawPackageId } = await params;
+  const packageId = parseNumericPackageId(rawPackageId);
 
   if (!packageId) {
     notFound();
