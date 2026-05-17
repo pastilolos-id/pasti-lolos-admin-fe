@@ -148,13 +148,15 @@ export default function TryoutExamViewPage() {
         <BackButton href={backHref} />
 
         <Button
-          type="button"
           variant="primary"
           size="default"
           className="w-full cursor-pointer rounded-full px-6 py-3 text-s1 text-neutral-1 sm:w-auto sm:px-8 sm:whitespace-nowrap"
+          asChild
         >
-          Lihat Soal, Jawaban, dan Pembahasan
-          <Icon name="arrow-left-circle" size={24} className="rotate-180" />
+          <Link href={`/tryout/${packageId}/${rawTryoutId}/questions`}>
+            Lihat Soal, Jawaban, dan Pembahasan
+            <Icon name="arrow-left-circle" size={24} className="rotate-180" />
+          </Link>
         </Button>
       </div>
     </section>
