@@ -1,22 +1,21 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-import { LOGIN_PATH } from "@/constants/routes";
-import { getMyProfile, logout } from "@/lib/auth/authApi";
+import { ApiError } from "@/lib/auth/api-client";
+import { getMyProfile } from "@/lib/auth/authApi";
 import { mapMyProfileToAuthUser } from "@/lib/auth/login-form-utils";
+import { handleSessionExpired } from "@/lib/auth/session-lifecycle";
 import { ADMIN_ROLE_ID } from "@/lib/auth/types";
-import { removeToken } from "@/lib/cookies/tokenCookies";
+import { redirectNonAdminToUserApp } from "@/lib/auth/user-app-url";
 import { useAuthStore } from "@/lib/store/auth-store";
 
 type Phase = "checking" | "idle";
 
 export default function TokenValidator() {
   const pathname = usePathname();
-  const router = useRouter();
   const setUser = useAuthStore((state) => state.setUser);
-  const clearUser = useAuthStore((state) => state.clearUser);
   const hasValidatedOnce = useRef(false);
   const [phase, setPhase] = useState<Phase>("checking");
 
@@ -38,25 +37,18 @@ export default function TokenValidator() {
         }
 
         if (profile.userRoleId !== ADMIN_ROLE_ID) {
-          try {
-            await logout();
-          } catch {
-            // best-effort
-          }
-          clearUser();
-          removeToken();
-          router.replace(LOGIN_PATH);
+          redirectNonAdminToUserApp();
           return;
         }
 
         setUser(mapMyProfileToAuthUser(profile));
-      } catch {
+      } catch (err) {
         if (cancelled) {
           return;
         }
-        clearUser();
-        removeToken();
-        router.replace(LOGIN_PATH);
+        if (err instanceof ApiError && err.status === 401) {
+          void handleSessionExpired();
+        }
       } finally {
         if (!cancelled) {
           hasValidatedOnce.current = true;
@@ -70,7 +62,7 @@ export default function TokenValidator() {
     return () => {
       cancelled = true;
     };
-  }, [pathname, setUser, clearUser, router]);
+  }, [pathname, setUser]);
 
   if (!hasValidatedOnce.current || phase === "checking") {
     return (

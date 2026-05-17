@@ -1,3 +1,8 @@
+import {
+  handleSessionExpired,
+  shouldTriggerSessionExpired,
+} from "@/lib/auth/session-lifecycle";
+
 const baseUrl =
   typeof process.env.NEXT_PUBLIC_API_URL === "string"
     ? process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "")
@@ -37,6 +42,9 @@ export async function apiFetch<T>(
   const data = isJson ? await response.json() : await response.text();
 
   if (!response.ok) {
+    if (response.status === 401 && shouldTriggerSessionExpired(path)) {
+      void handleSessionExpired();
+    }
     throw new ApiError(response.status, data);
   }
 

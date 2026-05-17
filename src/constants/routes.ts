@@ -12,6 +12,7 @@ export const PUBLIC_ROUTE_PREFIXES: readonly string[] = [LOGIN_PATH];
 /**
  * Route prefixes for the private app shell. Keep aligned with
  * `src/app/(private-route)` and `sidebarData.ts` menu hrefs.
+ * Also used by `proxy.ts` and `TokenValidator` for auth routing.
  */
 export const PRIVATE_ROUTE_PREFIXES: readonly string[] = [
   DASHBOARD_PATH,

@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { createQueryClient } from "@/lib/query/query-client";
+import { SessionProvider } from "@/providers/session-provider";
 import { StoreInitializer } from "@/providers/store-initializer";
 
 type AppProviderProps = {
@@ -15,8 +16,10 @@ export function AppProvider({ children }: AppProviderProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <StoreInitializer />
-      {children}
+      <SessionProvider>
+        <StoreInitializer />
+        {children}
+      </SessionProvider>
     </QueryClientProvider>
   );
 }
