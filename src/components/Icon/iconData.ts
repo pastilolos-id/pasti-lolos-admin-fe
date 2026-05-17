@@ -1,4 +1,5 @@
 import arrowLeftCircleIcon from "@/assets/icons/arrow-left-circle.svg";
+import arrowLeftCircleBgBlueIcon from "@/assets/icons/arrow-left-circle-bg-blue.svg";
 import discountIcon from "@/assets/icons/discount.svg";
 import examMultipleChoiceOutlineIcon from "@/assets/icons/exam-multiple-choice-outline.svg";
 import eyeClosedIcon from "@/assets/icons/eye-closed.svg";
@@ -22,6 +23,10 @@ const iconImagePath = {
   "arrow-left-circle": {
     src: arrowLeftCircleIcon,
     alt: "Arrow Left Circle",
+  },
+  "arrow-left-circle-bg-blue": {
+    src: arrowLeftCircleBgBlueIcon,
+    alt: "Arrow Left Circle Background Blue",
   },
   discount: {
     src: discountIcon,

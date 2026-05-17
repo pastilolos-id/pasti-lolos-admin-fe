@@ -25,6 +25,7 @@ type IconProps = SVGProps<SVGSVGElement> & {
   pathClassName?: string;
   name:
     | "arrow-left-circle"
+    | "arrow-left-circle-bg-blue"
     | "card"
     | "chevron-down-fill"
     | "course"
@@ -64,6 +65,7 @@ const Icon = ({
     case "google-fullcolor":
     case "eye-closed":
     case "arrow-left-circle":
+    case "arrow-left-circle-bg-blue":
     case "discount":
     case "hamburger-menu-toggle":
     case "exam-multiple-choice-outline":

@@ -182,14 +182,10 @@ export default function TryoutPackageViewPage() {
                   </span>
                 </div>
 
-                <Button
-                  type="button"
-                  className="rounded-full px-10"
-                  disabled
-                  aria-disabled
-                  title="Fitur edit soal dan jawaban belum tersedia"
-                >
-                  Edit Soal dan Jawaban
+                <Button type="button" className="rounded-full px-10" asChild>
+                  <Link href={`/tryout/${parentId}/${section.id}/view`}>
+                    Lihat Tryout
+                  </Link>
                 </Button>
               </div>
             </article>
