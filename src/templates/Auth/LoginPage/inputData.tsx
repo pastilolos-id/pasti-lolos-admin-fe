@@ -10,6 +10,7 @@ const loginInputData: inputDataType[] = [
     className: "",
     leftIcon: "mail",
     required: true,
+    variant: "auth",
   },
   {
     type: "password",
@@ -19,6 +20,7 @@ const loginInputData: inputDataType[] = [
     placeholder: "********",
     className: "",
     required: true,
+    variant: "auth",
   },
 ];
 

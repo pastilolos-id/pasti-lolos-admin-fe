@@ -24,8 +24,10 @@ export default function InputTextField({
   control,
   label,
   error,
+  variant,
   ...input
 }: inputTextFieldType & inputControlType) {
+  const isAuthVariant = variant === "auth";
   const hasIcons = Boolean(input.leftIcon || input.rightIcon);
 
   return (
@@ -56,7 +58,9 @@ export default function InputTextField({
           </FieldLabel>
 
           {hasIcons ? (
-            <InputGroup className={inputGroupTextClassName}>
+            <InputGroup
+              className={isAuthVariant ? undefined : inputGroupTextClassName}
+            >
               {input.leftIcon && (
                 <InputGroupAddon
                   aria-invalid={fieldState.invalid}

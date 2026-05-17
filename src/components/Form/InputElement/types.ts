@@ -12,6 +12,8 @@ type inputType = {
   defaultValue?: string | number | boolean;
   leftIcon?: IconProps["name"];
   rightIcon?: IconProps["name"];
+  /** Auth login/register pages use translucent inputs; admin forms use neutral fields. */
+  variant?: "auth" | "admin";
 };
 
 export type inputTextFieldType = ComponentProps<"input"> &

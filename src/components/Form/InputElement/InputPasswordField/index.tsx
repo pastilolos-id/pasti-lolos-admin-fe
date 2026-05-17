@@ -26,8 +26,10 @@ export default function InputPasswordField({
   control,
   label,
   error,
+  variant,
   ...input
 }: inputPasswordFieldType & inputControlType) {
+  const isAuthVariant = variant === "auth";
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const handleOnClickEyeIcon = () => {
@@ -52,7 +54,9 @@ export default function InputPasswordField({
             {label}
           </FieldLabel>
 
-          <InputGroup className={inputGroupTextClassName}>
+          <InputGroup
+            className={isAuthVariant ? undefined : inputGroupTextClassName}
+          >
             <InputGroupAddon
               align="inline-start"
               aria-invalid={fieldState.invalid}
