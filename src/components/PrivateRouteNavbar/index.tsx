@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import BrandWordmark from "@/components/BrandWordmark";
 import Icon from "@/components/Icon";
 import SidebarFooterSection from "@/components/Sidebar/SidebarFooterSection";
 import { menuItems } from "@/components/Sidebar/sidebarData";
@@ -32,12 +33,12 @@ export default function PrivateRouteNavbar() {
         data-state={menuOpen ? "open" : "closed"}
       >
         <Collapsible open={menuOpen} onOpenChange={setMenuOpen}>
-          <div className="ml-1 flex items-center justify-between">
-            <Link
-              href="/dashboard"
-              className="text-2xl font-bold text-primary-4 -tracking-widest sm:ml-7 sm:text-[2rem]"
-            >
-              pastilolos
+          <div className="flex items-center justify-between">
+            <Link href="/dashboard" className="inline-flex shrink-0 items-center">
+              <BrandWordmark
+                variant="biru"
+                textClassName="text-[2rem] font-bold leading-none text-primary-4 -tracking-widest"
+              />
             </Link>
 
             <CollapsibleTrigger asChild>

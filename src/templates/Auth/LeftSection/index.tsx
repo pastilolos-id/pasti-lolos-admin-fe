@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { DetailedHTMLProps, HTMLAttributes } from "react";
+import BrandWordmark from "@/components/BrandWordmark";
 import { cn } from "@/lib/utils";
 
 type AuthLeftSectionProps = DetailedHTMLProps<
@@ -23,11 +24,13 @@ export default function AuthLeftSection({
         className,
       )}
     >
-      <Link
-        href="/"
-        className="text-[2rem] text-center font-bold -tracking-widest block"
-      >
-        pastilolos
+      <Link href="/" className="block text-center">
+        <BrandWordmark
+          variant="putih"
+          className="justify-center"
+          textClassName="text-[2rem] font-bold -tracking-widest"
+          size={40}
+        />
       </Link>
 
       <section className="flex flex-col gap-7 w-full max-w-md mx-auto">
