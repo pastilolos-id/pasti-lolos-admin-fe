@@ -5,6 +5,7 @@ import { useState } from "react";
 import Icon from "@/components/Icon";
 import SidebarFooterSection from "@/components/Sidebar/SidebarFooterSection";
 import { menuItems } from "@/components/Sidebar/sidebarData";
+import NavbarMenuItemWithSubMenu from "./NavbarMenuItemWithSubMenu";
 import {
   Button,
   Collapsible,
@@ -55,21 +56,33 @@ export default function PrivateRouteNavbar() {
           </div>
 
           <CollapsibleContent className="mt-5 flex flex-col gap-3 data-[state=closed]:animate-out">
-            {menuItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMenuOpen(false)}
-              >
-                <Button
-                  variant="secondary"
-                  className="h-auto w-full justify-start gap-3 rounded-full py-4 text-lg font-semibold"
+            {menuItems.map((item) => {
+              if (item.subMenu) {
+                return (
+                  <NavbarMenuItemWithSubMenu
+                    key={item.title}
+                    {...item}
+                    onClose={() => setMenuOpen(false)}
+                  />
+                );
+              }
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMenuOpen(false)}
                 >
-                  <Icon name={item.icon} size={24} />
-                  {item.title}
-                </Button>
-              </Link>
-            ))}
+                  <Button
+                    variant="secondary"
+                    className="h-auto w-full justify-start gap-3 rounded-full py-4 text-lg font-semibold"
+                  >
+                    <Icon name={item.icon} size={24} />
+                    {item.title}
+                  </Button>
+                </Link>
+              );
+            })}
             <SidebarFooterSection
               layout="navbar"
               onClose={() => setMenuOpen(false)}

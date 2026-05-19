@@ -19,7 +19,7 @@ export const PRIVATE_ROUTE_PREFIXES: readonly string[] = [
   "/courses",
   "/tryout",
   "/question-bank",
-  "/contributors",
+  "/account-management",
   "/vouchers",
   "/transactions",
 ];
