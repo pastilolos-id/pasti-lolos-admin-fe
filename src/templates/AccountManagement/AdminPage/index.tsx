@@ -1,3 +1,5 @@
+import AccountPage from "../AccountPage";
+
 export default function AdminPage() {
-  return <p>Admin Page</p>;
+  return <AccountPage variant="admin" />;
 }

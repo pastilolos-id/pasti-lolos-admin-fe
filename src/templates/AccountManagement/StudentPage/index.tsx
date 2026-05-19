@@ -1,3 +1,5 @@
+import AccountPage from "../AccountPage";
+
 export default function StudentPage() {
-  return <p>Student Page</p>;
+  return <AccountPage variant="students" />;
 }

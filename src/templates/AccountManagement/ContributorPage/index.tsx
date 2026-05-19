@@ -1,3 +1,5 @@
+import AccountPage from "../AccountPage";
+
 export default function ContributorPage() {
-  return <p>Contributors Page</p>;
+  return <AccountPage variant="contributors" />;
 }
