@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 type TableCoulmnType = {
   accessorKey: string;
-  title: string;
+  title: ReactNode;
   className?: string;
   textPosition?: "left" | "center" | "right";
   /** When set, replaces plain text rendering for this column (e.g. badges, actions). */

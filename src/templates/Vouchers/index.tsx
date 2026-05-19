@@ -1,3 +1,1 @@
-export default function VouchersPage() {
-  return <p>Vouchers Page</p>;
-}
+export { default } from "./VoucherPage";
