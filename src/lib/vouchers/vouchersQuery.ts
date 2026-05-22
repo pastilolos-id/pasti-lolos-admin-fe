@@ -6,6 +6,8 @@
  * - useVouchersSummaryQuery()
  * - useDeleteVoucherMutation()
  * - useCreateVoucherMutation() — payload: VoucherCreatePayload from mapVoucherFormToCreatePayload
+ * - useVoucherDetailQuery(id) — map row via mapVoucherRowToFormValues for edit
+ * - useUpdateVoucherMutation(id) — payload: VoucherUpdatePayload from mapVoucherFormToUpdatePayload
  * - vouchersQueryKeys in this file
  *
  * Example:

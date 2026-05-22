@@ -14,15 +14,20 @@ import VoucherFormFooter from "./VoucherFormFooter";
 
 const voucherFormId = "voucher-form";
 
-export default function VoucherForm({
-  mode,
-  formKey = 0,
-  onSubmit,
-}: VoucherFormProps) {
+export default function VoucherForm(props: VoucherFormProps) {
+  const { mode, onSubmit } = props;
   const readOnly = false;
+
+  const formRemountKey =
+    props.mode === "create" ? String(props.formKey ?? 0) : props.voucherId;
+
   const initialValues = useMemo(
-    () => getDefaultVoucherFormValues(mode),
-    [mode],
+    () =>
+      getDefaultVoucherFormValues(
+        mode,
+        props.mode === "edit" ? props.initialValues : undefined,
+      ),
+    [mode, props],
   );
 
   const inputData = useMemo(
@@ -52,7 +57,7 @@ export default function VoucherForm({
   return (
     <form
       id={voucherFormId}
-      key={formKey}
+      key={formRemountKey}
       noValidate
       onSubmit={handleSubmit(handleValidSubmit)}
     >

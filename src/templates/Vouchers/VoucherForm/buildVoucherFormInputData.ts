@@ -71,6 +71,12 @@ export function buildVoucherFormInputData({
   ];
 }
 
-export function getDefaultVoucherFormValues(_mode: "create"): VoucherFormValues {
+export function getDefaultVoucherFormValues(
+  mode: "create" | "edit",
+  initialValues?: VoucherFormValues,
+): VoucherFormValues {
+  if (mode === "edit" && initialValues) {
+    return { ...initialValues };
+  }
   return { ...emptyVoucherFormValues };
 }

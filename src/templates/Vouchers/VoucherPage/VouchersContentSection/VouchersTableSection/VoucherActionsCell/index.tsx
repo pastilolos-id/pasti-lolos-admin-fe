@@ -1,6 +1,7 @@
 "use client";
 
 import { Pencil, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,10 +20,6 @@ export default function VoucherActionsCell({
   id,
   judul,
 }: VoucherActionsCellProps) {
-  const handleEdit = () => {
-    console.log("[voucher mock] edit", id);
-  };
-
   const handleDelete = () => {
     console.log("[voucher mock] delete", id, judul);
   };
@@ -33,14 +30,15 @@ export default function VoucherActionsCell({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              type="button"
               variant="ghost"
               size="icon-xs"
               className="size-8 shrink-0 rounded-full bg-[#80B0FF]/25 text-[#448AFF] hover:bg-[#80B0FF]/40 sm:size-9"
               aria-label="Edit voucher"
-              onClick={handleEdit}
+              asChild
             >
-              <Pencil className="size-4 shrink-0" strokeWidth={2.25} />
+              <Link href={`/vouchers/${id}/edit`}>
+                <Pencil className="size-4 shrink-0" strokeWidth={2.25} />
+              </Link>
             </Button>
           </TooltipTrigger>
           <TooltipContent side="top" sideOffset={6}>

@@ -11,9 +11,16 @@ export type VoucherFormValues = {
   status: VoucherDisplayStatus;
 };
 
-export type VoucherFormProps = {
-  mode: "create";
-  /** Remount form when adding another voucher after success. */
-  formKey?: number;
-  onSubmit: (values: VoucherFormValues) => void;
-};
+export type VoucherFormProps =
+  | {
+      mode: "create";
+      /** Remount form when adding another voucher after success. */
+      formKey?: number;
+      onSubmit: (values: VoucherFormValues) => void;
+    }
+  | {
+      mode: "edit";
+      voucherId: string;
+      initialValues: VoucherFormValues;
+      onSubmit: (values: VoucherFormValues) => void;
+    };

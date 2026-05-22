@@ -55,3 +55,6 @@ export type VoucherCreatePayload = {
   amount: number;
   is_active: boolean;
 };
+
+/** PUT/PATCH /vouchers/:id body (illustrative). */
+export type VoucherUpdatePayload = VoucherCreatePayload;
