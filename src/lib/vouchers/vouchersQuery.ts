@@ -5,6 +5,7 @@
  * - useVouchersListQuery(params: VoucherApiListParams)
  * - useVouchersSummaryQuery()
  * - useDeleteVoucherMutation()
+ * - useCreateVoucherMutation() — payload: VoucherCreatePayload from mapVoucherFormToCreatePayload
  * - vouchersQueryKeys in this file
  *
  * Example:

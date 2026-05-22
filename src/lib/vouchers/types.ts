@@ -45,3 +45,13 @@ export type VoucherApiSummaryResponse = {
   totalTrendPercent: number;
   activeTrendPercent: number;
 };
+
+/** POST /vouchers body (illustrative). */
+export type VoucherCreatePayload = {
+  title: string;
+  code: string;
+  valid_from: string;
+  valid_until: string;
+  amount: number;
+  is_active: boolean;
+};
