@@ -6,20 +6,29 @@ import Icon from "@/components/Icon";
 import PointerTooltip from "@/components/PointerTooltip";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { MockTryoutExamQuestions } from "../tryoutExamQuestionsMock";
+
+import type { MockQuestion } from "../tryoutExamQuestionsMock";
+import QuestionsSectionHeader from "./QuestionsSectionHeader";
+import QuestionsSectionSidebar from "./QuestionsSectionSidebar";
 
 type QuestionsSectionProps = {
-  data: MockTryoutExamQuestions;
+  examName: string;
+  questions: MockQuestion[];
   initialSelectedByQuestionId: Record<number, number | null>;
+  onEditCurrentQuestion: (question: MockQuestion) => void;
+  onAddOneQuestion: () => void;
 };
 
 export default function QuestionsSection({
-  data,
+  examName,
+  questions,
   initialSelectedByQuestionId,
+  onEditCurrentQuestion,
+  onAddOneQuestion,
 }: QuestionsSectionProps) {
   const sortedQuestions = useMemo(
-    () => [...data.questions].sort((a, b) => a.order - b.order),
-    [data.questions],
+    () => [...questions].sort((a, b) => a.order - b.order),
+    [questions],
   );
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -72,9 +81,11 @@ export default function QuestionsSection({
     <section className="flex flex-col gap-6 xl:flex-row xl:items-start">
       <div className="flex min-h-[calc(100vh-75px)] min-w-0 flex-1 flex-col justify-between rounded-3xl border border-neutral-3 bg-neutral-1 p-4 sm:p-11">
         <div>
-          <p className="text-h4 font-semibold text-neutral-6">
-            Soal Ke-{currentOrder} dari {totalQuestions} soal
-          </p>
+          <QuestionsSectionHeader
+            currentOrder={currentOrder}
+            totalQuestions={totalQuestions}
+            onEdit={() => onEditCurrentQuestion(current)}
+          />
           <p className="mt-6 text-b1 text-neutral-5">{current.questionText}</p>
 
           {current.imageUrl ? (
@@ -173,33 +184,13 @@ export default function QuestionsSection({
         </div>
       </div>
 
-      <aside className="w-full max-h-[calc(100vh-75px)] shrink-0 overflow-auto xl:w-80">
-        <div className="rounded-3xl border border-neutral-3 bg-white p-5 shadow-sm">
-          <h2 className="text-b1 font-semibold text-neutral-6">
-            {data.examName}
-          </h2>
-          <div className="mt-4 flex flex-wrap gap-3">
-            {sortedQuestions.map((q, idx) => {
-              const isActive = idx === currentIndex;
-              return (
-                <button
-                  key={q.questionId}
-                  type="button"
-                  onClick={() => setCurrentIndex(idx)}
-                  className={cn(
-                    "flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full border text-c1 font-semibold transition-all sm:size-12",
-                    isActive
-                      ? "border-primary-4 bg-primary-5 text-neutral-1 ring-2 ring-primary-4/40 ring-offset-2 ring-offset-white"
-                      : "border-primary-4 bg-neutral-1 text-neutral-6 hover:bg-primary-5/10",
-                  )}
-                >
-                  {q.order}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </aside>
+      <QuestionsSectionSidebar
+        examName={examName}
+        questions={sortedQuestions}
+        currentIndex={currentIndex}
+        onSelectQuestion={setCurrentIndex}
+        onAddOneQuestion={onAddOneQuestion}
+      />
     </section>
   );
 }
