@@ -12,6 +12,10 @@ import {
   normalizeLoginPayload,
 } from "@/lib/auth/login-form-utils";
 import { parseLoginError } from "@/lib/auth/parseLoginError";
+import {
+  beginVoluntaryLogout,
+  endVoluntaryLogout,
+} from "@/lib/auth/session-lifecycle";
 import { ADMIN_ROLE_ID } from "@/lib/auth/types";
 import { removeToken } from "@/lib/cookies/tokenCookies";
 import { useAuthStore } from "@/lib/store/auth-store";
@@ -72,6 +76,7 @@ export default function LoginPage() {
       const res = await loginUser(body);
 
       if (res.user.userRoleId !== ADMIN_ROLE_ID) {
+        beginVoluntaryLogout();
         try {
           await logoutUser();
         } catch {
@@ -84,6 +89,7 @@ export default function LoginPage() {
         return;
       }
 
+      endVoluntaryLogout();
       setUser(mapApiUserToAuthUser(res.user));
       router.replace(DASHBOARD_PATH);
     } catch (err) {

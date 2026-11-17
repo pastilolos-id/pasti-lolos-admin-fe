@@ -6,7 +6,10 @@ import { useEffect, useRef, useState } from "react";
 import { ApiError } from "@/lib/auth/api-client";
 import { getMyProfile } from "@/lib/auth/authApi";
 import { mapMyProfileToAuthUser } from "@/lib/auth/login-form-utils";
-import { handleSessionExpired } from "@/lib/auth/session-lifecycle";
+import {
+  endVoluntaryLogout,
+  handleSessionExpired,
+} from "@/lib/auth/session-lifecycle";
 import { ADMIN_ROLE_ID } from "@/lib/auth/types";
 import { redirectNonAdminToUserApp } from "@/lib/auth/user-app-url";
 import { useAuthStore } from "@/lib/store/auth-store";
@@ -41,6 +44,7 @@ export default function TokenValidator() {
           return;
         }
 
+        endVoluntaryLogout();
         setUser(mapMyProfileToAuthUser(profile));
       } catch (err) {
         if (cancelled) {

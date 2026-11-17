@@ -5,6 +5,7 @@ import Icon from "@/components/Icon";
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui";
 import { LOGIN_PATH } from "@/constants/routes";
 import { useLogoutMutation } from "@/lib/auth/authQuery";
+import { beginVoluntaryLogout } from "@/lib/auth/session-lifecycle";
 import { removeToken } from "@/lib/cookies/tokenCookies";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,7 @@ export default function LogoutSidebarMenuButton({
 
   const handleLogout = async () => {
     onBeforeLogout?.();
+    beginVoluntaryLogout();
     try {
       await logoutUser();
     } catch {

@@ -5,7 +5,7 @@ import { useAuthStore } from "@/lib/store/auth-store";
 import { useSessionStore } from "@/lib/store/session-store";
 
 export const SESSION_EXPIRED_MESSAGE =
-  "Sesi anda telah habis, silakan logout kembali";
+  "Sesi anda telah habis, silakan login kembali";
 
 export const SESSION_EXPIRED_REDIRECT_MS = 2500;
 
@@ -13,6 +13,14 @@ let sessionExpiredRedirect: (() => void) | null = null;
 
 export function setSessionExpiredRedirect(redirect: () => void): void {
   sessionExpiredRedirect = redirect;
+}
+
+export function beginVoluntaryLogout(): void {
+  useSessionStore.getState().setVoluntaryLogout(true);
+}
+
+export function endVoluntaryLogout(): void {
+  useSessionStore.getState().setVoluntaryLogout(false);
 }
 
 function redirectToLogin(): void {
@@ -27,7 +35,7 @@ function redirectToLogin(): void {
 
 export async function handleSessionExpired(): Promise<void> {
   const sessionStore = useSessionStore.getState();
-  if (sessionStore.isHandlingSessionExpiry) {
+  if (sessionStore.isHandlingSessionExpiry || sessionStore.isVoluntaryLogout) {
     return;
   }
 
